@@ -2,6 +2,8 @@ package hootdoot.bananamod;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,9 +21,10 @@ import org.apache.logging.log4j.Logger;
 import java.util.stream.Collectors;
 
 
-@Mod("bananamod")
+@Mod(BananaMod.MODID)
 public class BananaMod{
     // Directly reference a log4j logger.
+    public static final String MODID = "bananamod";
     private static final Logger LOGGER = LogManager.getLogger();
 
     public BananaMod() {
@@ -79,6 +82,7 @@ public class BananaMod{
             // register a new block here
             LOGGER.info("HELLO from Register Block");
         }
+
     }
 
 
