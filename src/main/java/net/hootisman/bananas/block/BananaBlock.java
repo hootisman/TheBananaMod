@@ -1,4 +1,4 @@
-package net.hootisman.bananas.blocks;
+package net.hootisman.bananas.block;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;

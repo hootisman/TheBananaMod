@@ -1,6 +1,8 @@
 package net.hootisman.bananas;
 
 import com.mojang.logging.LogUtils;
+import net.hootisman.bananas.registry.BananaBlocks;
+import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -38,7 +40,9 @@ public class BananaCore
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        BananaRegistries.init(modEventBus);
+//        BananaRegistries.init(modEventBus);
+        BananaBlocks.register(modEventBus);
+        BananaItems.register(modEventBus);
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
