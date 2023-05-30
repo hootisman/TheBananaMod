@@ -1,6 +1,7 @@
 package net.hootisman.bananas.registry;
 
 import net.hootisman.bananas.BananaCore;
+import net.hootisman.bananas.item.BananaItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -15,7 +16,9 @@ public class BananaItems {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BananaCore.MODID);
 
+    public static final RegistryObject<Item> BANANA_ITEM = ITEMS.register("banana",BananaItem::new);
     public static final RegistryObject<Item> BANANA_BLOCK_ITEM = ITEMS.register("banana_block", () -> new BlockItem(BananaBlocks.BANANA_BLOCK.get(), new Item.Properties()));
+
 
     public static void register(IEventBus b){
         ITEMS.register(b);
@@ -25,8 +28,11 @@ public class BananaItems {
     @SubscribeEvent
     public static void addToCreative(CreativeModeTabEvent.BuildContents event){
         if (event.getTab() == CreativeModeTabs.BUILDING_BLOCKS){
-            /* ADDING ITEMS TO CREATIVE TAB */
+            /* Building Blocks tab */
             event.accept(BANANA_BLOCK_ITEM);
+        } else if (event.getTab() == CreativeModeTabs.FOOD_AND_DRINKS) {
+            /* Food n Drinks Tab */
+            event.accept(BANANA_ITEM);
         }
     }
 }
