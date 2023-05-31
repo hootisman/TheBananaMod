@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "b",
+    "s"
+  ],
+  "key": {
+    "b": {
+      "item":"bananas:banana"
+    },
+    "s": {
+      "item":"minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "bananas:banana_pickaxe"
+  }
+}
