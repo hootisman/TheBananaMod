@@ -2,6 +2,7 @@ package net.hootisman.bananas.registry;
 
 import net.hootisman.bananas.BananaCore;
 import net.hootisman.bananas.item.BananaItem;
+import net.hootisman.bananas.item.BananaPickaxeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -18,6 +19,7 @@ public class BananaItems {
 
     public static final RegistryObject<Item> BANANA_ITEM = ITEMS.register("banana",BananaItem::new);
     public static final RegistryObject<Item> BANANA_BLOCK_ITEM = ITEMS.register("banana_block", () -> new BlockItem(BananaBlocks.BANANA_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> BANANA_PICKAXE_ITEM = ITEMS.register("banana_pickaxe", BananaPickaxeItem::new);
 
 
     public static void register(IEventBus b){

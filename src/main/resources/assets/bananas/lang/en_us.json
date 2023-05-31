@@ -1,5 +1,6 @@
 {
   "block.bananas.banana_block": "Banana Block",
   "item.bananas.banana_block": "Banana Block",
-  "item.bananas.banana": "Banana"
+  "item.bananas.banana": "Banana",
+  "item.bananas.banana_pickaxe": "Banana Pickaxe"
 }
