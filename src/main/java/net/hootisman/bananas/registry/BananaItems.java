@@ -35,6 +35,8 @@ public class BananaItems {
         } else if (event.getTab() == CreativeModeTabs.FOOD_AND_DRINKS) {
             /* Food n Drinks Tab */
             event.accept(BANANA_ITEM);
+        } else if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+            event.accept(BANANA_PICKAXE_ITEM);
         }
     }
 }
