@@ -20,6 +20,7 @@ public class BananaItems {
     public static final RegistryObject<Item> BANANA_ITEM = ITEMS.register("banana",BananaItem::new);
     public static final RegistryObject<Item> BANANA_BLOCK_ITEM = ITEMS.register("banana_block", () -> new BlockItem(BananaBlocks.BANANA_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<Item> BANANA_PICKAXE_ITEM = ITEMS.register("banana_pickaxe", BananaPickaxeItem::new);
+    public static final RegistryObject<Item> BANANA_BUNDLE_ITEM = ITEMS.register("banana_bundle",() -> new Item(new Item.Properties()));
 
 
     public static void register(IEventBus b){
@@ -35,6 +36,7 @@ public class BananaItems {
         } else if (event.getTab() == CreativeModeTabs.FOOD_AND_DRINKS) {
             /* Food n Drinks Tab */
             event.accept(BANANA_ITEM);
+            event.accept(BANANA_BUNDLE_ITEM);
         } else if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(BANANA_PICKAXE_ITEM);
         }

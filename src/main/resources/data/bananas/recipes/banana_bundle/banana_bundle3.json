@@ -3,14 +3,17 @@
   "category": "building",
   "pattern": [
     "bb",
-    "bb"
+    "sb"
   ],
   "key": {
     "b": {
-      "item": "bananas:banana_bundle"
+      "item": "bananas:banana"
+    },
+    "s": {
+      "item": "minecraft:string"
     }
   },
   "result": {
-    "item": "bananas:banana_block"
+    "item": "bananas:banana_bundle"
   }
 }
