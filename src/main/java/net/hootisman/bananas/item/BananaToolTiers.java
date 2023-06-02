@@ -1,19 +1,18 @@
 package net.hootisman.bananas.item;
 
 import net.hootisman.bananas.registry.BananaItems;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.ForgeTier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
 public enum BananaToolTiers implements Tier {
     BANANA(0,48,5.0F,0.0F,18,() -> {
-        return Ingredient.of(BananaItems.BANANA_ITEM.get());
+        return Ingredient.of(BananaItems.BANANA.get());
+    }),
+    BURNT_BANANA(0,144,6.0F,0.0F,16,() -> {
+        return Ingredient.of(BananaItems.BANANA.get());
     });
 
     private final int level;
