@@ -1,10 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "building",
-  "pattern": [
-    "bb",
-    "sb"
-  ],
+  "category": "misc",
   "key": {
     "b": {
       "item": "bananas:banana"
@@ -13,7 +9,12 @@
       "item": "minecraft:string"
     }
   },
+  "pattern": [
+    "bs",
+    "bb"
+  ],
   "result": {
     "item": "bananas:banana_bundle"
-  }
+  },
+  "show_notification": true
 }

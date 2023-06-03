@@ -1,19 +1,20 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
+  "key": {
+    "b": {
+      "item": "bananas:banana"
+    },
+    "s": {
+      "item": "minecraft:stick"
+    }
+  },
   "pattern": [
     "b",
     "s"
   ],
-  "key": {
-    "b": {
-      "item":"bananas:banana"
-    },
-    "s": {
-      "item":"minecraft:stick"
-    }
-  },
   "result": {
     "item": "bananas:banana_pickaxe"
-  }
+  },
+  "show_notification": true
 }

@@ -1,6 +1,10 @@
 {
-  "type":"bananas:banana_glm",
+  "type": "bananas:banana_leaves",
   "conditions": [
+    {
+      "block": "minecraft:jungle_leaves",
+      "condition": "minecraft:block_state_property"
+    },
     {
       "condition": "minecraft:inverted",
       "term": {
@@ -29,10 +33,6 @@
           }
         ]
       }
-    },
-    {
-      "condition": "minecraft:block_state_property",
-      "block": "minecraft:jungle_leaves"
     }
   ]
 }

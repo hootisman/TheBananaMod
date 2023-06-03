@@ -39,4 +39,8 @@ public class BananaLeavesLootModifier extends LootModifier {
     public Codec<? extends IGlobalLootModifier> codec() {
         return CODEC;
     }
+
+    public static class Builder {
+
+    }
 }

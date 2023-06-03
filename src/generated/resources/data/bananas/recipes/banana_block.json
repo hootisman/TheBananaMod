@@ -1,16 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "building",
-  "pattern": [
-    "bb",
-    "bb"
-  ],
   "key": {
     "b": {
       "item": "bananas:banana_bundle"
     }
   },
+  "pattern": [
+    "bb",
+    "bb"
+  ],
   "result": {
     "item": "bananas:banana_block"
-  }
+  },
+  "show_notification": true
 }
