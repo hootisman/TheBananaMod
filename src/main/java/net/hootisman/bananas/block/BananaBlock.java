@@ -1,6 +1,7 @@
 package net.hootisman.bananas.block;
 
 import net.hootisman.bananas.registry.BananaBlocks;
+import net.hootisman.bananas.registry.BananaSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -31,7 +32,9 @@ public class BananaBlock extends Block {
             float f = mobeffectinstance == null ? 0.0F : (float)(mobeffectinstance.getAmplifier() + 1);
 
             if (Mth.ceil(distance - 3.0F - f) > 0){
+
                 level.setBlock(blockPos, BananaBlocks.BANANA_MUSH_BLOCK.get().defaultBlockState(), 3);
+                entity.playSound(BananaSounds.BANANA_MUSH.get());
             }
         }
 

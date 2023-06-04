@@ -21,6 +21,8 @@ public class DataGenerators {
         gen.addProvider(event.includeClient(), new BanBlockStateProvider(output,helper));
         gen.addProvider(event.includeClient(), new BanItemModelProvider(output,helper));
         gen.addProvider(event.includeClient(), new BanLangProviderENUS(output,"en_us"));
+        gen.addProvider(event.includeClient(), new BanSoundProvider(output,helper));
+
         gen.addProvider(event.includeServer(), BanLootTableProvider.create(output));
         gen.addProvider(event.includeServer(), new BanLootModifierProvider(output));
         gen.addProvider(event.includeServer(), new BanRecipeProvider(output));

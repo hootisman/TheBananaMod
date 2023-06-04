@@ -1,19 +1,41 @@
-{   "parent": "block/thin_block",
-  "textures": {
-    "particle": "block/snow",
-    "texture": "bananas:block/banana_mush_block"
-  },
+{
+  "parent": "minecraft:block/thin_block",
   "elements": [
-    {   "from": [ 0, 0, 0 ],
-      "to": [ 16, 2, 16 ],
+    {
       "faces": {
-        "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#texture", "cullface": "down" },
-        "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#texture" },
-        "north": { "uv": [ 0, 14, 16, 16 ], "texture": "#texture", "cullface": "north" },
-        "south": { "uv": [ 0, 14, 16, 16 ], "texture": "#texture", "cullface": "south" },
-        "west":  { "uv": [ 0, 14, 16, 16 ], "texture": "#texture", "cullface": "west" },
-        "east":  { "uv": [ 0, 14, 16, 16 ], "texture": "#texture", "cullface": "east" }
-      }
+        "down": {
+          "texture": "#texture"
+        },
+        "east": {
+          "texture": "#texture"
+        },
+        "north": {
+          "texture": "#texture"
+        },
+        "south": {
+          "texture": "#texture"
+        },
+        "up": {
+          "texture": "#texture"
+        },
+        "west": {
+          "texture": "#texture"
+        }
+      },
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        2,
+        16
+      ]
     }
-  ]
+  ],
+  "textures": {
+    "particle": "bananas:block/banana_mush_block",
+    "texture": "bananas:block/banana_mush_block"
+  }
 }

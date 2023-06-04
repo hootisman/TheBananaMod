@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
 import net.hootisman.bananas.registry.BananaLootModifiers;
+import net.hootisman.bananas.registry.BananaSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -45,6 +46,7 @@ public class BananaCore
         BananaBlocks.register(modEventBus);
         BananaItems.register(modEventBus);
         BananaLootModifiers.register(modEventBus);
+        BananaSounds.register(modEventBus);
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
