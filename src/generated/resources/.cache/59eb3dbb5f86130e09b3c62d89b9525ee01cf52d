@@ -1,2 +1,3 @@
-// 1.19.4	2023-06-02T14:17:58.006754173	Loot Tables
+// 1.19.4	2023-06-04T07:17:33.449187127	Loot Tables
 5bccf7355b1f127dcee91e7df0cbc5db65d2d634 data/bananas/loot_tables/blocks/banana_block.json
+5f36bdf0a834525fd3bf5053ffbd16910b7c3c60 data/bananas/loot_tables/blocks/banana_mush_block.json

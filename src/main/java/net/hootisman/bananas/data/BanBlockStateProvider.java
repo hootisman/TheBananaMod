@@ -1,6 +1,7 @@
 package net.hootisman.bananas.data;
 
 import net.hootisman.bananas.BananaCore;
+import net.hootisman.bananas.block.BananaMushBlock;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
@@ -19,7 +20,7 @@ public class BanBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         blockWithItemHelper(BananaBlocks.BANANA_BLOCK);
-        simpleLayerBlock(BananaBlocks.BANANA_MUSH_BLOCK.get(),"banana_mush_block",2.0F);
+        simpleLayerBlock(BananaBlocks.BANANA_MUSH_BLOCK.get(),"banana_mush_block", BananaMushBlock.BLOCK_HEIGHT);
     }
     private void simpleLayerBlock(Block block, String blockName ,float height){
 

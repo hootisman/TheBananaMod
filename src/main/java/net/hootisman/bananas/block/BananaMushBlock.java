@@ -12,15 +12,13 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BananaMushBlock extends Block {
-    //todo add drops and fix hitbox (voxelshape?); also add provider for this guys blockstates n models :)
-
-    private static VoxelShape SHAPE = Block.box(0.0D,0.0D,0.0D,16.0D,2.0D,16.0D);
+    public static final float BLOCK_HEIGHT = 6;
+    private static VoxelShape SHAPE = Block.box(0.0D,0.0D,0.0D,16.0D,BLOCK_HEIGHT,16.0D);
     public BananaMushBlock() {
         super(BlockBehaviour.Properties
                 .of(Material.CLAY)
                 .strength(0.1F)
-                .sound(SoundType.SLIME_BLOCK)
-                .noLootTable());
+                .sound(SoundType.SLIME_BLOCK));
     }
 
     @Override
