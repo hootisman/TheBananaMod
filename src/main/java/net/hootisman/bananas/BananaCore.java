@@ -6,6 +6,7 @@ import net.hootisman.bananas.registry.BananaItems;
 import net.hootisman.bananas.registry.BananaLootModifiers;
 import net.hootisman.bananas.registry.BananaSounds;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -28,6 +29,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
+import java.util.Arrays;
+
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(BananaCore.MODID)
 public class BananaCore
@@ -38,9 +41,13 @@ public class BananaCore
     private static final Logger LOGGER = LogUtils.getLogger();
     // Create a Deferred Register to hold Blocks which will all be registered under the "examplemod" namespace
 
+//    static{
+//        ArmorMaterials.values();
+//    }
     public BananaCore()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
 
 //        BananaRegistries.init(modEventBus);
         BananaBlocks.register(modEventBus);
@@ -72,6 +79,7 @@ public class BananaCore
     {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
+        LOGGER.info(Arrays.toString(ArmorMaterials.values()));
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent

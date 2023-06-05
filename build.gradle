@@ -117,6 +117,8 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 mixin {
+    add sourceSets.main, 'bananas.refmap.json'
+    config 'bananas.mixin.json'
 
 }
 

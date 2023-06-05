@@ -1,0 +1,11 @@
+{
+  "package": "net.hootisman.bananas.mixin",
+  "required": true,
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "bananas.refmap.json",
+  "mixins": [
+  ],
+  "server": [
+    "MixinArmorMaterials"
+  ]
+}
