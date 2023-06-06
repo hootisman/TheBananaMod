@@ -1,6 +1,7 @@
 package net.hootisman.bananas.registry;
 
 import net.hootisman.bananas.BananaCore;
+import net.hootisman.bananas.item.BananaBootsItem;
 import net.hootisman.bananas.item.BananaItem;
 import net.hootisman.bananas.item.BananaPickaxeItem;
 import net.hootisman.bananas.item.BurntBananaPickaxeItem;
@@ -23,6 +24,7 @@ public class BananaItems {
     public static final RegistryObject<Item> BANANA_PICKAXE = ITEMS.register("banana_pickaxe", BananaPickaxeItem::new);
     public static final RegistryObject<Item> BANANA_BUNDLE = ITEMS.register("banana_bundle",() -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> BURNT_BANANA_PICKAXE = ITEMS.register("burnt_banana_pickaxe", BurntBananaPickaxeItem::new);
+    public static final RegistryObject<Item> BANANA_BOOTS = ITEMS.register("banana_boots", BananaBootsItem::new);
 
 
     public static void register(IEventBus b){
@@ -42,6 +44,8 @@ public class BananaItems {
         } else if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(BANANA_PICKAXE);
             event.accept(BURNT_BANANA_PICKAXE);
+        } else if (event.getTab() == CreativeModeTabs.COMBAT) {
+            event.accept(BANANA_BOOTS);
         }
     }
 }

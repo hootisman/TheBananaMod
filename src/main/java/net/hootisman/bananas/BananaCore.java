@@ -41,9 +41,6 @@ public class BananaCore
     private static final Logger LOGGER = LogUtils.getLogger();
     // Create a Deferred Register to hold Blocks which will all be registered under the "examplemod" namespace
 
-//    static{
-//        ArmorMaterials.values();
-//    }
     public BananaCore()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();

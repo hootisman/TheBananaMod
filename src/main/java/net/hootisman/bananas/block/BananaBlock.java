@@ -1,5 +1,6 @@
 package net.hootisman.bananas.block;
 
+import net.hootisman.bananas.event.BootsFallHandler;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaSounds;
 import net.minecraft.core.BlockPos;
@@ -28,7 +29,7 @@ public class BananaBlock extends Block {
         if (!level.isClientSide() && entity instanceof LivingEntity ){
             entity.causeFallDamage(distance,0.0F,level.damageSources().fall());
 
-            if (isEntityTakingDamage((LivingEntity) entity, distance)){
+            if (BootsFallHandler.isEntityTakingDamage((LivingEntity) entity, distance)){
                 level.setBlock(blockPos, BananaBlocks.BANANA_MUSH_BLOCK.get().defaultBlockState(), 3);
                 level.playSound(null,blockPos,BananaSounds.BANANA_MUSH.get(), SoundSource.BLOCKS);
             }
@@ -37,10 +38,10 @@ public class BananaBlock extends Block {
 
     }
 
-    private boolean isEntityTakingDamage(LivingEntity entity, float distance){
-
-        MobEffectInstance mobeffectinstance = ((LivingEntity)entity).getEffect(MobEffects.JUMP);
-        float f = mobeffectinstance == null ? 0.0F : (float)(mobeffectinstance.getAmplifier() + 1);
-        return Mth.ceil(distance - 3.0F - f) > 0;
-    }
+//    private boolean isEntityTakingDamage(LivingEntity entity, float distance){
+//
+//        MobEffectInstance mobeffectinstance = ((LivingEntity)entity).getEffect(MobEffects.JUMP);
+//        float f = mobeffectinstance == null ? 0.0F : (float)(mobeffectinstance.getAmplifier() + 1);
+//        return Mth.ceil(distance - 3.0F - f) > 0;
+//    }
 }

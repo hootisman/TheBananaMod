@@ -1,5 +1,6 @@
 package net.hootisman.bananas.mixin;
 
+import net.hootisman.bananas.item.BananaBootsItem;
 import net.minecraft.Util;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -19,20 +20,22 @@ import java.util.function.Supplier;
 
 @Mixin(ArmorMaterials.class)
 public abstract class MixinArmorMaterials {
+    @SuppressWarnings("ShadowTarget")
     @Shadow private @Final @Mutable static ArmorMaterials[] $VALUES;
+
 
     @Inject(method = "<clinit>",at = @At("RETURN"))
     private static void changeEnum(CallbackInfo ci){
         ArrayList<ArmorMaterials> tempValues = new ArrayList<>(Arrays.asList(MixinArmorMaterials.$VALUES));
 
-        ArmorMaterials BANANA = invokeInit("BANANA",tempValues.get(tempValues.size() - 1).ordinal() + 1,"banana",1, Util.make(new EnumMap<>(ArmorItem.Type.class), (map) -> {
+        BananaBootsItem.BANANA = invokeInit("BANANA",tempValues.get(tempValues.size() - 1).ordinal() + 1,"banana",1, Util.make(new EnumMap<>(ArmorItem.Type.class), (map) -> {
             map.put(ArmorItem.Type.BOOTS,1);
             map.put(ArmorItem.Type.CHESTPLATE,1);
             map.put(ArmorItem.Type.LEGGINGS,1);
             map.put(ArmorItem.Type.HELMET,1);
         }),10, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F,0.0F, Ingredient::of);
 
-        tempValues.add(BANANA);
+        tempValues.add(BananaBootsItem.BANANA);
         MixinArmorMaterials.$VALUES = tempValues.toArray(new ArmorMaterials[0]);
     }
 
