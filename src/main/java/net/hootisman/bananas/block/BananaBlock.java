@@ -1,6 +1,5 @@
 package net.hootisman.bananas.block;
 
-import net.hootisman.bananas.event.armor.BootsFallHandler;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaSounds;
 import net.minecraft.core.BlockPos;
@@ -37,7 +36,7 @@ public class BananaBlock extends Block {
 
     }
 
-    private boolean isEntityTakingDamage(LivingEntity entity, float distance){
+    public static boolean isEntityTakingDamage(LivingEntity entity, float distance){
 
         MobEffectInstance mobeffectinstance = ((LivingEntity)entity).getEffect(MobEffects.JUMP);
         float f = mobeffectinstance == null ? 0.0F : (float)(mobeffectinstance.getAmplifier() + 1);

@@ -18,6 +18,7 @@ public class BanLangProviderENUS extends LanguageProvider {
         add(BananaItems.BANANA_BUNDLE.get(),"Banana Bundle");
         add(BananaItems.BANANA_PICKAXE.get(),"Banana Pickaxe");
         add(BananaItems.BURNT_BANANA_PICKAXE.get(),"Burnt Banana Pickaxe");
+        add(BananaItems.BANANA_BOOTS.get(), "Banana Boots");
 
         //blocks
         add(BananaBlocks.BANANA_BLOCK.get(),"Banana Block");

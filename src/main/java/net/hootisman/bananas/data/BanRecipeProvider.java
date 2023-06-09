@@ -1,7 +1,6 @@
 package net.hootisman.bananas.data;
 
 import net.hootisman.bananas.BananaCore;
-import net.hootisman.bananas.block.BananaBlock;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.data.PackOutput;
@@ -24,25 +23,44 @@ public class BanRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> recipes ) {
-        //blocks
+        /** blocks **/
+        //Banana Block
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, BananaBlocks.BANANA_BLOCK.get(),1)
                 .define('b',BananaItems.BANANA_BUNDLE.get())
                 .pattern("bb")
                 .pattern("bb")
-                .unlockedBy("has_banana_bundle",has(BananaItems.BANANA_BUNDLE.get()))
+                .unlockedBy(getHasName(BananaItems.BANANA_BUNDLE.get()),has(BananaItems.BANANA.get()))
                 .save(recipes, new ResourceLocation(BananaCore.MODID,"banana_block"));
 
-        //items
-        itemRecipes(recipes);
+        /** Items **/
+        bananaBundleRecipes(recipes);
+
+        //Banana Pickaxe
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, BananaItems.BANANA_PICKAXE.get(),1)
+                .define('b',BananaItems.BANANA.get())
+                .define('s', Items.STICK)
+                .pattern("b")
+                .pattern("s")
+                .unlockedBy(getHasName(BananaItems.BANANA.get()),has(BananaItems.BANANA.get()))
+                .save(recipes, new ResourceLocation(BananaCore.MODID,"banana_pickaxe"));
+
+        //Banana Boots
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, BananaItems.BANANA_BOOTS.get(),1)
+                .define('b',BananaBlocks.BANANA_BLOCK.get())
+                .define('s', Items.STRING)
+                .pattern("s s")
+                .pattern("b b")
+                .unlockedBy(getHasName(BananaBlocks.BANANA_BLOCK.get()),has(BananaBlocks.BANANA_BLOCK.get()))
+                .save(recipes, new ResourceLocation(BananaCore.MODID,"banana_boots"));
     }
 
-    private void itemRecipes(@NotNull Consumer<FinishedRecipe> recipes){
+    private void bananaBundleRecipes(@NotNull Consumer<FinishedRecipe> recipes){
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BananaItems.BANANA_BUNDLE.get(),1)
                 .define('b',BananaItems.BANANA.get())
                 .define('s', Items.STRING)
                 .pattern("sb")
                 .pattern("bb")
-                .unlockedBy("has_banana",has(BananaItems.BANANA.get()))
+                .unlockedBy(getHasName(BananaItems.BANANA.get()),has(BananaItems.BANANA.get()))
                 .save(recipes, new ResourceLocation(BananaCore.MODID,"banana_bundle/banana_bundle0"));
 
 
@@ -51,7 +69,7 @@ public class BanRecipeProvider extends RecipeProvider {
                 .define('s', Items.STRING)
                 .pattern("bs")
                 .pattern("bb")
-                .unlockedBy("has_banana",has(BananaItems.BANANA.get()))
+                .unlockedBy(getHasName(BananaItems.BANANA.get()),has(BananaItems.BANANA.get()))
                 .save(recipes, new ResourceLocation(BananaCore.MODID,"banana_bundle/banana_bundle1"));
 
 
@@ -60,7 +78,7 @@ public class BanRecipeProvider extends RecipeProvider {
                 .define('s', Items.STRING)
                 .pattern("bb")
                 .pattern("bs")
-                .unlockedBy("has_banana",has(BananaItems.BANANA.get()))
+                .unlockedBy(getHasName(BananaItems.BANANA.get()),has(BananaItems.BANANA.get()))
                 .save(recipes, new ResourceLocation(BananaCore.MODID,"banana_bundle/banana_bundle2"));
 
 
@@ -69,17 +87,10 @@ public class BanRecipeProvider extends RecipeProvider {
                 .define('s', Items.STRING)
                 .pattern("bb")
                 .pattern("sb")
-                .unlockedBy("has_banana",has(BananaItems.BANANA.get()))
+                .unlockedBy(getHasName(BananaItems.BANANA.get()),has(BananaItems.BANANA.get()))
                 .save(recipes, new ResourceLocation(BananaCore.MODID,"banana_bundle/banana_bundle3"));
 
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, BananaItems.BANANA_PICKAXE.get(),1)
-                .define('b',BananaItems.BANANA.get())
-                .define('s', Items.STICK)
-                .pattern("b")
-                .pattern("s")
-                .unlockedBy("has_banana",has(BananaItems.BANANA.get()))
-                .save(recipes, new ResourceLocation(BananaCore.MODID,"banana_pickaxe"));
     }
 
 

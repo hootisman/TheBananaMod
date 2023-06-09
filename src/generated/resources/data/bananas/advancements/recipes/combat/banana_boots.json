@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_banana_bundle": {
+    "has_banana_block": {
       "conditions": {
         "items": [
           {
             "items": [
-              "bananas:banana"
+              "bananas:banana_block"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "bananas:banana_block"
+        "recipe": "bananas:banana_boots"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_banana_bundle",
+      "has_banana_block",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "bananas:banana_block"
+      "bananas:banana_boots"
     ]
   }
 }
