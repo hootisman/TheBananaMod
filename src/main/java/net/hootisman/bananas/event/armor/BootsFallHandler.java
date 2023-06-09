@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.BananaCore;
 import net.hootisman.bananas.registry.BananaItems;
 import net.hootisman.bananas.registry.BananaSounds;
+import net.minecraft.nbt.ByteTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -23,6 +24,7 @@ public class BootsFallHandler {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static boolean isItemAtLastDurability;
 
+    private static final String tagName = "item_last_durability";
 
     @SubscribeEvent
     public static void onAfterArmorCalc(LivingDamageEvent event){
@@ -30,11 +32,13 @@ public class BootsFallHandler {
         DamageSource source = event.getSource();
         ItemStack feetArmor = event.getEntity().getItemBySlot(EquipmentSlot.FEET);
 
-        if (isEntityWearingBoots(event.getEntity(), source,false) && !isItemAtLastDurability){
+        if (isEntityWearingBoots(event.getEntity(), source,false)
+                && !(feetArmor.getOrCreateTag().getBoolean(tagName))
+                     ){
 //                debugEvent(event.getEntity(),source,event.toString());
                 feetArmor.setDamageValue(feetArmor.getDamageValue() - 1);
+                feetArmor.addTagElement(tagName,ByteTag.valueOf(false));
         }
-        isItemAtLastDurability = false;
     }
 
     @SubscribeEvent
@@ -42,12 +46,14 @@ public class BootsFallHandler {
 
         DamageSource source = event.getSource();
         ItemStack feetArmor = event.getEntity().getItemBySlot(EquipmentSlot.FEET);
-        isItemAtLastDurability = feetArmor.getDamageValue() + 1 >= feetArmor.getMaxDamage();
 
-        if(isEntityWearingBoots(event.getEntity(),source,false) && isItemAtLastDurability){
-
-//                debugEvent(event.getEntity(), source,event.toString());
+        if(isEntityWearingBoots(event.getEntity(),source,false)
+                && feetArmor.getDamageValue() + 1 >= feetArmor.getMaxDamage()
+                    ){
+                debugEvent(event.getEntity(), source,event.toString());
                 feetArmor.setDamageValue(feetArmor.getDamageValue() - 1);
+//                if (feetArmor.getTag() != null) feetArmor.getTag().putBoolean(tagName,true);
+                feetArmor.addTagElement(tagName,ByteTag.valueOf(true));
         }
     }
 
@@ -62,7 +68,6 @@ public class BootsFallHandler {
 
             event.getEntity().getLevel().playSound(null,event.getEntity().blockPosition(),BananaSounds.BANANA_MUSH.get(), SoundSource.BLOCKS);
             feetArmor.hurtAndBreak(1, (ServerPlayer)event.getEntity(), (callback) -> callback.broadcastBreakEvent(EquipmentSlot.FEET));
-
             event.setCanceled(true);
         }
     }

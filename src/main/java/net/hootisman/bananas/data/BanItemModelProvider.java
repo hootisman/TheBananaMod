@@ -18,6 +18,7 @@ public class BanItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
         simpleItem(BananaItems.BANANA);
         simpleItem(BananaItems.BANANA_BUNDLE);
+        simpleItem(BananaItems.BANANA_BOOTS);
         handheldItem(BananaItems.BANANA_PICKAXE);
         handheldItem(BananaItems.BURNT_BANANA_PICKAXE);
 
