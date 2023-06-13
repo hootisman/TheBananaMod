@@ -1,7 +1,7 @@
 package net.hootisman.bananas.data;
 
 import net.hootisman.bananas.BananaCore;
-import net.hootisman.bananas.misc.BananaCreativeModeTab;
+import net.hootisman.bananas.registry.BananaCreativeModeTab;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.data.PackOutput;

@@ -30,5 +30,6 @@
     "recipes": [
       "bananas:banana_bundle/banana_bundle0"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

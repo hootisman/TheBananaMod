@@ -45,7 +45,8 @@ public class BananaBootsItem extends ArmorItem {
             feetarmor.hurtAndBreak(uniqueDamage, event.getEntity(), (cb) -> cb.broadcastBreakEvent(EquipmentSlot.FEET));
 
             event.setDamageMultiplier(0.0F);
-            event.getEntity().getLevel().playSound(null,event.getEntity().blockPosition(), BananaSounds.BANANA_MUSH.get(), SoundSource.BLOCKS);
+            event.getEntity().level().playSound(null,event.getEntity().blockPosition(), BananaSounds.BANANA_MUSH.get(), SoundSource.BLOCKS);
+
         }
     }
 

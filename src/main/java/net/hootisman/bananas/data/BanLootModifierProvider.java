@@ -11,7 +11,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.storage.loot.predicates.AlternativeLootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
@@ -39,11 +39,11 @@ public class BanLootModifierProvider extends GlobalLootModifierProvider {
 
     }
 
-    private LootItemCondition.Builder invertCondition(AlternativeLootItemCondition.Builder builder) {
+    private LootItemCondition.Builder invertCondition(AnyOfCondition.Builder builder) {
         return builder.invert();
     }
 
-    private AlternativeLootItemCondition.Builder orConditions(LootItemCondition.Builder condition1, LootItemCondition.Builder condition2) {
+    private AnyOfCondition.Builder orConditions(LootItemCondition.Builder condition1, LootItemCondition.Builder condition2) {
         return condition1.or(condition2);
     }
 

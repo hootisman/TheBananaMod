@@ -30,5 +30,6 @@
     "recipes": [
       "bananas:banana_block"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }
