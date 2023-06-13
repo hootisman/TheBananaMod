@@ -1,6 +1,7 @@
 package net.hootisman.bananas.data;
 
 import net.hootisman.bananas.BananaCore;
+import net.hootisman.bananas.misc.BananaCreativeModeTab;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.data.PackOutput;
@@ -19,6 +20,7 @@ public class BanLangProviderENUS extends LanguageProvider {
         add(BananaItems.BANANA_PICKAXE.get(),"Banana Pickaxe");
         add(BananaItems.BURNT_BANANA_PICKAXE.get(),"Burnt Banana Pickaxe");
         add(BananaItems.BANANA_BOOTS.get(), "Banana Boots");
+        add(BananaCreativeModeTab.tabName,"Bunch of Banana Stuff");
 
         //blocks
         add(BananaBlocks.BANANA_BLOCK.get(),"Banana Block");

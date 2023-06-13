@@ -4,5 +4,6 @@
   "item.bananas.banana_boots": "Banana Boots",
   "item.bananas.banana_bundle": "Banana Bundle",
   "item.bananas.banana_pickaxe": "Banana Pickaxe",
-  "item.bananas.burnt_banana_pickaxe": "Burnt Banana Pickaxe"
+  "item.bananas.burnt_banana_pickaxe": "Burnt Banana Pickaxe",
+  "itemGroup.bananas.creativetab": "Bunch of Banana Stuff"
 }

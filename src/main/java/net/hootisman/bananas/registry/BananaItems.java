@@ -32,20 +32,20 @@ public class BananaItems {
         b.register(BananaItems.class);  //for creativetab event handler
     }
 
-    @SubscribeEvent
-    public static void addToCreative(CreativeModeTabEvent.BuildContents event){
-        if (event.getTab() == CreativeModeTabs.BUILDING_BLOCKS){
-            /* Building Blocks tab */
-            event.accept(BANANA_BLOCK_ITEM);
-        } else if (event.getTab() == CreativeModeTabs.FOOD_AND_DRINKS) {
-            /* Food n Drinks Tab */
-            event.accept(BANANA);
-            event.accept(BANANA_BUNDLE);
-        } else if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            event.accept(BANANA_PICKAXE);
-            event.accept(BURNT_BANANA_PICKAXE);
-        } else if (event.getTab() == CreativeModeTabs.COMBAT) {
-            event.accept(BANANA_BOOTS);
-        }
-    }
+//    @SubscribeEvent
+//    public static void addToCreative(CreativeModeTabEvent.BuildContents event){
+//        if (event.getTab() == CreativeModeTabs.BUILDING_BLOCKS){
+//            /* Building Blocks tab */
+//            event.accept(BANANA_BLOCK_ITEM);
+//        } else if (event.getTab() == CreativeModeTabs.FOOD_AND_DRINKS) {
+//            /* Food n Drinks Tab */
+//            event.accept(BANANA);
+//            event.accept(BANANA_BUNDLE);
+//        } else if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+//            event.accept(BANANA_PICKAXE);
+//            event.accept(BURNT_BANANA_PICKAXE);
+//        } else if (event.getTab() == CreativeModeTabs.COMBAT) {
+//            event.accept(BANANA_BOOTS);
+//        }
+//    }
 }

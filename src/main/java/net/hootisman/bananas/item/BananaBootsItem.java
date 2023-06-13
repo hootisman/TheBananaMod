@@ -2,6 +2,7 @@ package net.hootisman.bananas.item;
 
 import net.hootisman.bananas.BananaCore;
 import net.hootisman.bananas.block.BananaBlock;
+import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
 import net.hootisman.bananas.registry.BananaSounds;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,7 +38,9 @@ public class BananaBootsItem extends ArmorItem {
 
     @SubscribeEvent
     public static void onFall(LivingFallEvent event){
-        if (isEntityWearingBoots(event.getEntity()) && BananaBlock.isEntityTakingDamage(event.getEntity(),event.getDistance())){
+        if (isEntityWearingBoots(event.getEntity())
+                && BananaBlock.isEntityTakingDamage(event.getEntity(),event.getDistance())
+                    && !event.getEntity().getBlockStateOn().is(BananaBlocks.BANANA_BLOCK.get())){
             ItemStack feetarmor = event.getEntity().getItemBySlot(EquipmentSlot.FEET);
             feetarmor.hurtAndBreak(uniqueDamage, event.getEntity(), (cb) -> cb.broadcastBreakEvent(EquipmentSlot.FEET));
 
