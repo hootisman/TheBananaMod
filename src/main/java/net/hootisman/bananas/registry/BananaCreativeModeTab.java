@@ -20,12 +20,15 @@ public class BananaCreativeModeTab {
         return CreativeModeTab.builder().title(Component.translatable(tabName))
                 .icon(() -> new ItemStack(BananaItems.BANANA.get()))
                 .displayItems((flags,output) -> {
+                    /* blocks */
+                    output.accept(new ItemStack(BananaBlocks.BANANA_BLOCK.get()));
+                    /* items */
                     output.accept(new ItemStack(BananaItems.BANANA.get()));
                     output.accept(new ItemStack(BananaItems.BANANA_BUNDLE.get()));
-                    output.accept(new ItemStack(BananaItems.BANANA_BLOCK_ITEM.get()));
                     output.accept(new ItemStack(BananaItems.BANANA_PICKAXE.get()));
                     output.accept(new ItemStack(BananaItems.BURNT_BANANA_PICKAXE.get()));
                     output.accept(new ItemStack(BananaItems.BANANA_BOOTS.get()));
+                    output.accept(new ItemStack(BananaItems.FLOUR.get()));
                 }).build();
     });
 

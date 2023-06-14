@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "layers=1": {
+      "model": "bananas:block/flour_height2"
+    },
+    "layers=2": {
+      "model": "bananas:block/flour_height4"
+    },
+    "layers=3": {
+      "model": "bananas:block/flour_height6"
+    },
+    "layers=4": {
+      "model": "bananas:block/flour_height8"
+    },
+    "layers=5": {
+      "model": "bananas:block/flour_height10"
+    },
+    "layers=6": {
+      "model": "bananas:block/flour_height12"
+    },
+    "layers=7": {
+      "model": "bananas:block/flour_height14"
+    },
+    "layers=8": {
+      "model": "bananas:block/flour_height16"
+    }
+  }
+}
