@@ -2,11 +2,8 @@ package net.hootisman.bananas.registry;
 
 import net.hootisman.bananas.BananaCore;
 import net.hootisman.bananas.item.*;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;

@@ -6,12 +6,15 @@ import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -26,42 +29,33 @@ public class FlourItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
-        BlockHitResult hitResult = getPlayerPOVHitResult(level,player, ClipContext.Fluid.NONE);
-        if (level.isClientSide){
-            return InteractionResultHolder.success(itemStack);
-        }else if (hitResult.getType() == HitResult.Type.BLOCK){
-            LOGGER.info("HIT A BLOCK!" );
-            BlockState hitBlock = level.getBlockState(hitResult.getBlockPos());
-            BlockState hitNeighborBlock = level.getBlockState(hitResult.getBlockPos().relative(hitResult.getDirection()));
-
-            BlockPos posToPlace;
-            BlockState blockToPlace;
-
-            if (hitBlock.is(BananaBlocks.FLOUR_BLOCK.get()) && hitBlock.getValue(FlourBlock.LAYERS) < 8){
-//                LOGGER.info("BLOCK IS FLOUR, ADDING LAYER...");
-                posToPlace = hitResult.getBlockPos();
-                blockToPlace = hitBlock.setValue(FlourBlock.LAYERS ,Math.min(8,hitBlock.getValue(FlourBlock.LAYERS) + 1));
-
-            } else if (hitNeighborBlock.is(BananaBlocks.FLOUR_BLOCK.get()) && hitNeighborBlock.getValue(FlourBlock.LAYERS) < 8) {
-//                LOGGER.info("NEIGHBORING BLOCK IS FLOUR, ADDING LAYER...");
-                posToPlace = hitResult.getBlockPos().relative(hitResult.getDirection());
-                blockToPlace = hitNeighborBlock.setValue(FlourBlock.LAYERS ,Math.min(8,hitNeighborBlock.getValue(FlourBlock.LAYERS) + 1) );
-
-            } else {
-//                LOGGER.info("NO FLOUR FOUND, ADDING TO WORLD...");
-                posToPlace = hitResult.getBlockPos().relative(hitResult.getDirection());
-                blockToPlace = BananaBlocks.FLOUR_BLOCK.get().defaultBlockState();
-
-            }
+    public InteractionResult useOn(UseOnContext context) {
+        Level level = context.getLevel();
+        BlockState hitBlock = level.getBlockState(context.getClickedPos());
+        BlockState hitBlockNeighbor = level.getBlockState(context.getClickedPos().relative(context.getClickedFace()));
 
 
-            level.setBlockAndUpdate(posToPlace,blockToPlace);
-            itemStack.shrink(1);
-
-            return InteractionResultHolder.consume(itemStack);
+        boolean flag = false;
+        if (canBlockAddFlour(hitBlock)){
+            level.setBlockAndUpdate(context.getClickedPos(),hitBlock.setValue(FlourBlock.LAYERS,Math.min(8,hitBlock.getValue(FlourBlock.LAYERS) + 1) ));
+            flag = true;
+        } else if (canBlockAddFlour(hitBlockNeighbor)) {
+            level.setBlockAndUpdate(context.getClickedPos().relative(context.getClickedFace()),hitBlockNeighbor.setValue(FlourBlock.LAYERS,Math.min(8,hitBlockNeighbor.getValue(FlourBlock.LAYERS) + 1) ));
+            flag = true;
+        } else if (hitBlockNeighbor.is(Blocks.AIR)) {
+            level.setBlockAndUpdate(context.getClickedPos().relative(context.getClickedFace()), BananaBlocks.FLOUR_BLOCK.get().defaultBlockState());
+            flag = true;
         }
-        return InteractionResultHolder.fail(itemStack);
+
+        if (flag){
+            context.getItemInHand().shrink(1);
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }else{
+            return InteractionResult.FAIL;
+        }
+    }
+
+    private boolean canBlockAddFlour(BlockState block){
+        return block.is(BananaBlocks.FLOUR_BLOCK.get()) && block.getValue(FlourBlock.LAYERS) < 8;
     }
 }
