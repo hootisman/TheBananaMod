@@ -5,6 +5,8 @@ import net.hootisman.bananas.block.FlourBlock;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -37,24 +39,21 @@ public class FlourItem extends Item {
 
         boolean flag = false;
         if (canBlockAddFlour(hitBlock)){
-            level.setBlockAndUpdate(context.getClickedPos(),hitBlock.setValue(FlourBlock.LAYERS,Math.min(8,hitBlock.getValue(FlourBlock.LAYERS) + 1) ));
-            flag = true;
+            flag = changeBlockState(level, context.getClickedPos(), hitBlock.setValue(FlourBlock.LAYERS,Math.min(8,hitBlock.getValue(FlourBlock.LAYERS) + 1)), context.getItemInHand());
         } else if (canBlockAddFlour(hitBlockNeighbor)) {
-            level.setBlockAndUpdate(context.getClickedPos().relative(context.getClickedFace()),hitBlockNeighbor.setValue(FlourBlock.LAYERS,Math.min(8,hitBlockNeighbor.getValue(FlourBlock.LAYERS) + 1) ));
-            flag = true;
+            flag = changeBlockState(level, context.getClickedPos().relative(context.getClickedFace()), hitBlockNeighbor.setValue(FlourBlock.LAYERS,Math.min(8,hitBlockNeighbor.getValue(FlourBlock.LAYERS) + 1)), context.getItemInHand());
         } else if (hitBlockNeighbor.is(Blocks.AIR)) {
-            level.setBlockAndUpdate(context.getClickedPos().relative(context.getClickedFace()), BananaBlocks.FLOUR_BLOCK.get().defaultBlockState());
-            flag = true;
+            flag = changeBlockState(level, context.getClickedPos().relative(context.getClickedFace()), BananaBlocks.FLOUR_BLOCK.get().defaultBlockState(), context.getItemInHand());
         }
 
-        if (flag){
-            context.getItemInHand().shrink(1);
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        }else{
-            return InteractionResult.FAIL;
-        }
+        return flag ? InteractionResult.sidedSuccess(level.isClientSide) : InteractionResult.FAIL;
     }
 
+    private boolean changeBlockState(Level level, BlockPos pos,BlockState state, ItemStack item){
+        item.shrink(1);
+        level.playSound(null,pos, SoundEvents.SAND_PLACE, SoundSource.BLOCKS);
+        return level.setBlockAndUpdate(pos,state);
+    }
     private boolean canBlockAddFlour(BlockState block){
         return block.is(BananaBlocks.FLOUR_BLOCK.get()) && block.getValue(FlourBlock.LAYERS) < 8;
     }
