@@ -18,6 +18,7 @@ public class BananaMushBlock extends Block {
         super(BlockBehaviour.Properties
                 .of()
                 .mapColor(MapColor.COLOR_YELLOW)
+                .replaceable()
                 .strength(0.1F)
                 .sound(SoundType.SLIME_BLOCK));
     }
