@@ -1,7 +1,13 @@
 package net.hootisman.bananas.block;
 
+import net.hootisman.bananas.item.FlourItem;
+import net.hootisman.bananas.registry.BananaBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
@@ -41,6 +47,15 @@ public class FlourBlock extends FallingBlock {
         builder.add(LAYERS);
     }
 
+    @Override
+    public void tick(BlockState state, ServerLevel level, BlockPos blockPos, RandomSource source) {
+        BlockState blockBelow = level.getBlockState(blockPos.below());
+        if ((isFree(blockBelow) || FlourItem.canBlockAddFlour(blockBelow)) && blockPos.getY() >= level.getMinBuildHeight()) {
+            FallingBlockEntity fallingblockentity = FallingBlockEntity.fall(level, blockPos, state);
+            this.falling(fallingblockentity);
+        }
+    }
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
@@ -60,4 +75,5 @@ public class FlourBlock extends FallingBlock {
     public VoxelShape getShape(BlockState blockState, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
         return SHAPE[blockState.getValue(LAYERS) - 1];
     }
+
 }

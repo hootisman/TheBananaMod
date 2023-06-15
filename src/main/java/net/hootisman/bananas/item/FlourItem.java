@@ -36,13 +36,14 @@ public class FlourItem extends Item {
         BlockState hitBlock = level.getBlockState(context.getClickedPos());
         BlockState hitBlockNeighbor = level.getBlockState(context.getClickedPos().relative(context.getClickedFace()));
 
+        LOGGER.info("BUID HEIGHT " + level.getMinBuildHeight());
 
         boolean flag = false;
-        if (canBlockAddFlour(hitBlock)){
+        if (canBlockAddFlour(hitBlock) && context.getPlayer() != null && !context.getPlayer().isShiftKeyDown()){
             flag = changeBlockState(level, context.getClickedPos(), hitBlock.setValue(FlourBlock.LAYERS,Math.min(8,hitBlock.getValue(FlourBlock.LAYERS) + 1)), context.getItemInHand());
         } else if (canBlockAddFlour(hitBlockNeighbor)) {
             flag = changeBlockState(level, context.getClickedPos().relative(context.getClickedFace()), hitBlockNeighbor.setValue(FlourBlock.LAYERS,Math.min(8,hitBlockNeighbor.getValue(FlourBlock.LAYERS) + 1)), context.getItemInHand());
-        } else if (hitBlockNeighbor.is(Blocks.AIR)) {
+        } else if (hitBlockNeighbor.isAir()) {
             flag = changeBlockState(level, context.getClickedPos().relative(context.getClickedFace()), BananaBlocks.FLOUR_BLOCK.get().defaultBlockState(), context.getItemInHand());
         }
 
@@ -54,7 +55,7 @@ public class FlourItem extends Item {
         level.playSound(null,pos, SoundEvents.SAND_PLACE, SoundSource.BLOCKS);
         return level.setBlockAndUpdate(pos,state);
     }
-    private boolean canBlockAddFlour(BlockState block){
+    public static boolean canBlockAddFlour(BlockState block){
         return block.is(BananaBlocks.FLOUR_BLOCK.get()) && block.getValue(FlourBlock.LAYERS) < 8;
     }
 }
