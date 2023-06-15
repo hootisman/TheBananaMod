@@ -61,22 +61,23 @@ public class FlourFallingEntity extends FallingBlockEntity {
 
                 if (!this.onGround() && !flag1) {   //if entity is not on ground AND is not concretepowder
                     if (!this.level().isClientSide && (this.time > 100 && (blockpos.getY() <= this.level().getMinBuildHeight() || blockpos.getY() > this.level().getMaxBuildHeight()) || this.time > 600)  ) {
-                        //if server, atleast 100 ticks have passed and block position is
+                        //if server, atleast 100 ticks have passed and block position is below the min build height OR block position is above the max build height OR the time has exceeded 600 ticks
                         if (this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-                            this.spawnAtLocation(block);
+                            //if entity can drop item and doEntityDrops gamerule is true
+                            this.spawnAtLocation(block);        //spawn itemEntity of the block
                         }
 
-                        this.discard();
+                        this.discard();                         //remove entity
                     }
                 } else {        //if enetiy is on ground OR is concretepowder
                     BlockState blockstate = this.level().getBlockState(blockpos);
                     this.setDeltaMovement(this.getDeltaMovement().multiply(0.7D, -0.5D, 0.7D));
-                    if (!blockstate.is(Blocks.MOVING_PISTON)) {
-                        if (!this.cancelDrop) {
+                    if (!blockstate.is(Blocks.MOVING_PISTON)) {     //if not moving piston
+                        if (!this.cancelDrop) {     //if drop not cancelled
                             boolean flag2 = blockstate.canBeReplaced(new DirectionalPlaceContext(this.level(), blockpos, Direction.DOWN, ItemStack.EMPTY, Direction.UP));
                             boolean flag3 = FallingBlock.isFree(this.level().getBlockState(blockpos.below())) && (!flag || !flag1);
                             boolean flag4 = this.blockState.canSurvive(this.level(), blockpos) && !flag3;
-                            if (flag2 && flag4) {
+                            if (flag2 && flag4) {   //if
                                 if (this.blockState.hasProperty(BlockStateProperties.WATERLOGGED) && this.level().getFluidState(blockpos).getType() == Fluids.WATER) {
                                     this.blockState = this.blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true));
                                 }
