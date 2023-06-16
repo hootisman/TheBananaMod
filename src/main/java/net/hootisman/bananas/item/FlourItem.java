@@ -36,7 +36,6 @@ public class FlourItem extends Item {
         BlockState hitBlock = level.getBlockState(context.getClickedPos());
         BlockState hitBlockNeighbor = level.getBlockState(context.getClickedPos().relative(context.getClickedFace()));
 
-        LOGGER.info("BUID HEIGHT " + level.getMinBuildHeight());
 
         boolean flag = false;
         if (canBlockAddFlour(hitBlock) && context.getPlayer() != null && !context.getPlayer().isShiftKeyDown()){
