@@ -51,7 +51,7 @@ public class FlourBlock extends FallingBlock {
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos blockPos, RandomSource source) {
         BlockState blockBelow = level.getBlockState(blockPos.below());
-        if ((isFree(blockBelow)) && blockPos.getY() >= level.getMinBuildHeight()) {
+        if ((isFree(blockBelow) || FlourItem.canBlockAddFlour(blockBelow)) && blockPos.getY() >= level.getMinBuildHeight()) {
             FlourFallingEntity flourFallingEntity = FlourFallingEntity.fall(level, blockPos, state);
             this.falling(flourFallingEntity);
         }

@@ -72,6 +72,12 @@ public class FlourFallingEntity extends FallingBlockEntity {
             if (!this.level().isClientSide) {       //on server tick
                 BlockPos blockpos = this.blockPosition();
 
+                BlockHitResult rayCastResult = this.level().clip(new ClipContext(this.position(), this.position().add(this.getDeltaMovement()), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).withDirection(Direction.DOWN);
+                LOGGER.info("HIT RESULT, type=" + rayCastResult.getType().toString() +" location="+rayCastResult.getLocation().toString() +" direction="+rayCastResult.getDirection() + " vec3=" + new Vec3(xo,yo,zo).toString()+" delta="+this.getDeltaMovement());
+                if (rayCastResult.getType() == HitResult.Type.BLOCK){
+                    LOGGER.info("FOUND BLOCK! "+ level().getBlockState(rayCastResult.getBlockPos()).toString());
+                }
+
                 if (!this.onGround()) {   //if entity is not on ground
                     if (!this.level().isClientSide && (this.time > 100 && (blockpos.getY() <= this.level().getMinBuildHeight() || blockpos.getY() > this.level().getMaxBuildHeight()) || this.time > 600)  ) {
                         //if server, atleast 100 ticks have passed and block position is below the min build height OR block position is above the max build height OR the time has exceeded 600 ticks
@@ -79,9 +85,9 @@ public class FlourFallingEntity extends FallingBlockEntity {
 //                            //if entity can drop item and doEntityDrops gamerule is true
 //                            this.spawnAtLocation(block);        //spawn itemEntity of the block
 //                        }
-                        LOGGER.info("time is OVER, deleting entity");
                         this.discard();                         //remove entity
                     }
+
                 } else {        //if enetiy is on ground
                     BlockState blockstate = this.level().getBlockState(blockpos);   //air if block is solid, blockstate if not solid
                     this.setDeltaMovement(this.getDeltaMovement().multiply(0.7D, -0.5D, 0.7D));
@@ -123,17 +129,21 @@ public class FlourFallingEntity extends FallingBlockEntity {
 //                            }
                         }
                     }
-                    else if (blockstate.is(BananaBlocks.FLOUR_BLOCK.get())) {
-                        LOGGER.info("IS A FLOUR BLOCK!");
-                        LOGGER.info(blockstate.toString());
-                        LOGGER.info("below flour block: " + level().getBlockState(blockpos.below()));
-                        LOGGER.info("is on ground? " + this.onGround());
+                    else if (blockstate.is(BananaBlocks.FLOUR_BLOCK.get()) && Math.abs(this.getDeltaMovement().get(Direction.Axis.Y)) <= 0) {
+//                        LOGGER.info("IS A FLOUR BLOCK!");
+//                        LOGGER.info(blockstate.toString());
+//                        LOGGER.info("below flour block: " + level().getBlockState(blockpos.below()));
+//                        LOGGER.info("is on ground? " + this.onGround());
 
-                        int layersToAdd = blockState.getValue(FlourBlock.LAYERS);
+                        int layersToAdd = blockstate.getValue(FlourBlock.LAYERS) + blockState.getValue(FlourBlock.LAYERS);
+                        if (layersToAdd > 8){
+                            level().setBlockAndUpdate(blockpos.above(), BananaBlocks.FLOUR_BLOCK.get().defaultBlockState().setValue(FlourBlock.LAYERS,layersToAdd - 8));
+                            layersToAdd = 8;
+                        }
+                        if(level().setBlockAndUpdate(blockpos, blockstate.setValue(FlourBlock.LAYERS,layersToAdd))){
+                            this.discard();
+                        }
 
-                        level().setBlockAndUpdate(blockpos, blockstate.setValue(FlourBlock.LAYERS,blockstate.getValue(FlourBlock.LAYERS) + layersToAdd));
-
-                        this.discard();
 
                     }
                 }
