@@ -39,7 +39,7 @@ public class FlourBlock extends FallingBlock {
     };
 
     public FlourBlock() {
-        super(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).sound(SoundType.SAND).strength(0.3F).noLootTable());
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).sound(SoundType.SAND).strength(0.3F));
         registerDefaultState(this.getStateDefinition().any().setValue(LAYERS, 1));
     }
 
