@@ -21,12 +21,14 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class FlourBlock extends FallingBlock {
     public static final IntegerProperty LAYERS = BlockStateProperties.LAYERS;
+//    public static final LootTable loot = L
     private static VoxelShape[] SHAPE = {
         Block.box(0.0D,0.0D,0.0D,16.0D,2.0D,16.0D),
         Block.box(0.0D,0.0D,0.0D,16.0D,4.0D,16.0D),

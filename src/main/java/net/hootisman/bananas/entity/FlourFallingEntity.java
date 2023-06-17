@@ -1,6 +1,7 @@
 package net.hootisman.bananas.entity;
 
 import com.mojang.logging.LogUtils;
+import net.hootisman.bananas.BananaCore;
 import net.hootisman.bananas.block.FlourBlock;
 import net.hootisman.bananas.mixin.MixinFallingBlockEntity;
 import net.hootisman.bananas.registry.BananaBlocks;
@@ -8,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
@@ -22,6 +24,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.loot.LootDataType;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -30,8 +34,6 @@ import org.slf4j.Logger;
 public class FlourFallingEntity extends FallingBlockEntity {
     private final Logger LOGGER = LogUtils.getLogger();
     private BlockState blockState = BananaBlocks.FLOUR_BLOCK.get().defaultBlockState();
-    private int timeEntityOnFlour;
-    private boolean cancelDrop;
     public FlourFallingEntity(EntityType<? extends FallingBlockEntity> entityType, Level level, BlockState state) {
         super(entityType, level);
         ((SettableBlockState)this).setBlockState(state);
@@ -40,7 +42,6 @@ public class FlourFallingEntity extends FallingBlockEntity {
         this(EntityType.FALLING_BLOCK, level, blockState);
         this.blockState = blockState;
         this.blocksBuilding = true;
-        this.dropItem = false;
         this.setPos(x, y, z);
         this.setDeltaMovement(Vec3.ZERO);
         this.xo = x;
@@ -72,11 +73,6 @@ public class FlourFallingEntity extends FallingBlockEntity {
             if (!this.level().isClientSide) {       //on server tick
                 BlockPos blockpos = this.blockPosition();
 
-                BlockHitResult rayCastResult = this.level().clip(new ClipContext(this.position(), this.position().add(this.getDeltaMovement()), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).withDirection(Direction.DOWN);
-                LOGGER.info("HIT RESULT, type=" + rayCastResult.getType().toString() +" location="+rayCastResult.getLocation().toString() +" direction="+rayCastResult.getDirection() + " vec3=" + new Vec3(xo,yo,zo).toString()+" delta="+this.getDeltaMovement());
-                if (rayCastResult.getType() == HitResult.Type.BLOCK){
-                    LOGGER.info("FOUND BLOCK! "+ level().getBlockState(rayCastResult.getBlockPos()).toString());
-                }
 
                 if (!this.onGround()) {   //if entity is not on ground
                     if (!this.level().isClientSide && (this.time > 100 && (blockpos.getY() <= this.level().getMinBuildHeight() || blockpos.getY() > this.level().getMaxBuildHeight()) || this.time > 600)  ) {
@@ -93,7 +89,7 @@ public class FlourFallingEntity extends FallingBlockEntity {
                     this.setDeltaMovement(this.getDeltaMovement().multiply(0.7D, -0.5D, 0.7D));
                     if (!blockstate.is(Blocks.MOVING_PISTON) && !blockstate.is(BananaBlocks.FLOUR_BLOCK.get())) {     //if not moving piston
 
-                        LOGGER.info(blockstate.toString());
+//                        LOGGER.info(blockstate.toString());
                         boolean flag2 = blockstate.canBeReplaced(new DirectionalPlaceContext(this.level(), blockpos, Direction.DOWN, ItemStack.EMPTY, Direction.UP));   //if block can be replaced
                         boolean flag3 = FallingBlock.isFree(this.level().getBlockState(blockpos.below()));  //if free to drop
                         boolean flag4 = this.blockState.canSurvive(this.level(), blockpos) && !flag3;       //if block can survive and NOT free to drop
@@ -105,23 +101,16 @@ public class FlourFallingEntity extends FallingBlockEntity {
 //                                this.blockState = this.blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true));
 //                            }
 
-                            LOGGER.info("BLOCK CAN BE REPALCED, WHT WILL HAPPEN?");
                             if (this.level().setBlock(blockpos, this.blockState, 3)) {  //if set block
-                                LOGGER.info("SET BLOCK!!!!");
+//                                LOGGER.info("SET BLOCK!!!!");
                                 ((ServerLevel)this.level()).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(blockpos, this.level().getBlockState(blockpos)));
                                 this.discard();
                                 if (block instanceof Fallable) {
                                     ((Fallable)block).onLand(this.level(), blockpos, this.blockState, blockstate, this);
                                 }
-                            }
-//                            else if (this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-//                                this.discard();
-//                                this.callOnBrokenAfterFall(block, blockpos);    //for brusable and dripstoen blocks
-//                                this.spawnAtLocation(block);
-//                            }
+                            } else{}
                         } else {    //block cannot be replaced or cant survive or IS free to drop
 
-                            LOGGER.info("WILL BE DESTROYED!!! SOZZY!!!!");
                             this.discard();
 //                            if (this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
 //                                this.callOnBrokenAfterFall(block, blockpos);
@@ -152,4 +141,14 @@ public class FlourFallingEntity extends FallingBlockEntity {
             this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
         }
     }
+    private void dropFlour(){
+        if (!this.level().isClientSide() && this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+            this.discard();
+//            this.spawnAtLocation(block);
+//            level().getServer().getLootData().getElement(LootDataType.TABLE,new ResourceLocation(BananaCore.MODID,"flour_block")).getRandomItems();
+        }
+    }
 }
+
+
+
