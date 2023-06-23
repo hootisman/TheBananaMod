@@ -56,7 +56,7 @@ public class FlourFallingEntity extends FallingBlockEntity {
             BlockState stateAtPos = level().getBlockState(blockPosition());   //air if block is solid, blockstate if not solid
             setDeltaMovement(getDeltaMovement().multiply(0.7D, -0.5D, 0.7D));
             if (!stateAtPos.is(Blocks.MOVING_PISTON) && !stateAtPos.is(BananaBlocks.FLOUR_BLOCK.get())) {     //if not moving piston
-                if(canPlaceBlock(stateAtPos)) trySetBlock(stateAtPos); else dropFlourItem();
+                if(canPlaceBlockAt(stateAtPos)) trySetBlockAt(stateAtPos); else dropFlourItem();
             } else if (stateAtPos.is(BananaBlocks.FLOUR_BLOCK.get()) && Math.abs(getDeltaMovement().get(Direction.Axis.Y)) <= 0) {
                 //TODO clean
                 int layersToAdd = stateAtPos.getValue(FlourBlock.LAYERS) + blockState.getValue(FlourBlock.LAYERS);
@@ -67,18 +67,17 @@ public class FlourFallingEntity extends FallingBlockEntity {
                 if (level().setBlockAndUpdate(blockPosition(), stateAtPos.setValue(FlourBlock.LAYERS, layersToAdd))) {
                     discard();
                 }
-
-
             }
-        }else { discardOutOfBoundsEntity(); }
+        }else discardOutOfBoundsEntity();
+
         setDeltaMovement(getDeltaMovement().scale(0.98D));
     }
-    private boolean canPlaceBlock(BlockState stateAtPos) {
+    private boolean canPlaceBlockAt(BlockState stateAtPos) {
         return stateAtPos.canBeReplaced(new DirectionalPlaceContext(level(), blockPosition(), Direction.DOWN, ItemStack.EMPTY, Direction.UP)) &&
                 blockState.canSurvive(level(), blockPosition()) &&
                 !FallingBlock.isFree(level().getBlockState(blockPosition().below()));
     }
-    private void trySetBlock(BlockState stateAtPos){
+    private void trySetBlockAt(BlockState stateAtPos){
 //                            if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && level().getFluidState(blockPosition()).getType() == Fluids.WATER) {
 //                                //can be waterlogged
 //                                blockState = blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true));
