@@ -50,39 +50,15 @@ public class FlourFallingEntity extends FallingBlockEntity {
 
     @Override
     public void tick() {
-        Block block = blockState.getBlock();
         moveFlourBlockTick();
 
         if (!level().isClientSide && onGround()) {       //on server tick and entity is on ground
             BlockState stateAtPos = level().getBlockState(blockPosition());   //air if block is solid, blockstate if not solid
             setDeltaMovement(getDeltaMovement().multiply(0.7D, -0.5D, 0.7D));
             if (!stateAtPos.is(Blocks.MOVING_PISTON) && !stateAtPos.is(BananaBlocks.FLOUR_BLOCK.get())) {     //if not moving piston
-
-                boolean flag2 = stateAtPos.canBeReplaced(new DirectionalPlaceContext(level(), blockPosition(), Direction.DOWN, ItemStack.EMPTY, Direction.UP));   //if block can be replaced
-                boolean flag3 = FallingBlock.isFree(level().getBlockState(blockPosition().below()));  //if free to drop
-                boolean flag4 = blockState.canSurvive(level(), blockPosition()) && !flag3;       //if block can survive and NOT free to drop
-                if (flag2 && flag4) {
-                    //will return true if block that landed on is solid
-
-//                            if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && level().getFluidState(blockPosition()).getType() == Fluids.WATER) {
-//                                //can be waterlogged
-//                                blockState = blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true));
-//                            }
-
-                    if (level().setBlock(blockPosition(), blockState, 3)) {  //if set block
-//                                LOGGER.info("SET BLOCK!!!!");
-                        ((ServerLevel)level()).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(blockPosition(), level().getBlockState(blockPosition())));
-                        discard();
-                        if (block instanceof Fallable) {
-                            ((Fallable)block).onLand(level(), blockPosition(), blockState, stateAtPos, this);
-                        }
-                    } else{}
-                } else {    //block cannot be replaced or cant survive or IS free to drop
-                    dropFlourItem();
-                }
-            }
-            else if (stateAtPos.is(BananaBlocks.FLOUR_BLOCK.get()) && Math.abs(getDeltaMovement().get(Direction.Axis.Y)) <= 0) {
-                //entity -> block
+                if(canPlaceBlock(stateAtPos)) trySetBlock(stateAtPos); else dropFlourItem();
+            } else if (stateAtPos.is(BananaBlocks.FLOUR_BLOCK.get()) && Math.abs(getDeltaMovement().get(Direction.Axis.Y)) <= 0) {
+                //TODO clean
                 int layersToAdd = stateAtPos.getValue(FlourBlock.LAYERS) + blockState.getValue(FlourBlock.LAYERS);
                 if (layersToAdd > 8) {
                     level().setBlockAndUpdate(blockPosition().above(), BananaBlocks.FLOUR_BLOCK.get().defaultBlockState().setValue(FlourBlock.LAYERS, layersToAdd - 8));
@@ -96,6 +72,25 @@ public class FlourFallingEntity extends FallingBlockEntity {
             }
         }else { discardOutOfBoundsEntity(); }
         setDeltaMovement(getDeltaMovement().scale(0.98D));
+    }
+    private boolean canPlaceBlock(BlockState stateAtPos) {
+        return stateAtPos.canBeReplaced(new DirectionalPlaceContext(level(), blockPosition(), Direction.DOWN, ItemStack.EMPTY, Direction.UP)) &&
+                blockState.canSurvive(level(), blockPosition()) &&
+                !FallingBlock.isFree(level().getBlockState(blockPosition().below()));
+    }
+    private void trySetBlock(BlockState stateAtPos){
+//                            if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && level().getFluidState(blockPosition()).getType() == Fluids.WATER) {
+//                                //can be waterlogged
+//                                blockState = blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true));
+//                            }
+
+        if (level().setBlock(blockPosition(), blockState, 3)) {  //if set block
+            ((ServerLevel)level()).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(blockPosition(), level().getBlockState(blockPosition())));
+            discard();
+            if (blockState.getBlock() instanceof Fallable) {
+                ((Fallable)blockState.getBlock()).onLand(level(), blockPosition(), blockState, stateAtPos, this);
+            }
+        }
     }
     private void moveFlourBlockTick(){
         ++time;
