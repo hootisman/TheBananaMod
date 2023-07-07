@@ -1,6 +1,7 @@
 package net.hootisman.bananas;
 
 import com.mojang.logging.LogUtils;
+import net.hootisman.bananas.block.FlourCauldronBlock;
 import net.hootisman.bananas.registry.BananaCreativeModeTab;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
@@ -27,12 +28,12 @@ public class BananaCore
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        BananaBlocks.register(modEventBus);
         BananaItems.register(modEventBus);
+        BananaBlocks.register(modEventBus);
         BananaLootModifiers.register(modEventBus);
         BananaSounds.register(modEventBus);
         BananaCreativeModeTab.register(modEventBus);
-
+        modEventBus.addListener(FlourCauldronBlock::addCauldronInteractions);
 
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -42,7 +43,6 @@ public class BananaCore
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
-        LOGGER.info(Arrays.toString(ArmorMaterials.values()));
     }
 
 }

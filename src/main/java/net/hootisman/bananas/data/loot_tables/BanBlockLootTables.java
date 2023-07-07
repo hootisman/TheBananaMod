@@ -1,6 +1,7 @@
 package net.hootisman.bananas.data.loot_tables;
 
 import net.hootisman.bananas.block.FlourBlock;
+import net.hootisman.bananas.block.FlourCauldronBlock;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -8,6 +9,7 @@ import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -37,22 +39,22 @@ public class BanBlockLootTables extends BlockLootSubProvider {
                         .add(LootItem.lootTableItem(BananaItems.BANANA.get()))
                 ));
 
-//        add(BananaBlocks.FLOUR_BLOCK.get(),
-//                LootTable.lootTable().withPool(LootPool.lootPool()
-//                    .setRolls(ConstantValue.exactly(1.0F))
-//                    .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(BananaBlocks.FLOUR_BLOCK.get())
-//                            .setProperties(StatePropertiesPredicate.Builder.properties()
-//                                    .hasProperty(FlourBlock.LAYERS,1)))
-//                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1.0F)))
-//                    .add(LootItem.lootTableItem(BananaItems.FLOUR.get()))
-//                ));
         LootTable.Builder flourTable = LootTable.lootTable();
+        LootTable.Builder flourCauldronTable = LootTable.lootTable()
+                                                        .withPool(LootPool.lootPool()
+                                                                            .setRolls(ConstantValue.exactly(1.0F))
+                                                                            .add(LootItem.lootTableItem(Blocks.CAULDRON)));
         for (int i = 1; i <= 8; i++){
             flourTable.withPool(blockStatePool(BananaBlocks.FLOUR_BLOCK.get()
                     .defaultBlockState()
                     .setValue(FlourBlock.LAYERS,i), BananaItems.FLOUR.get(), FlourBlock.LAYERS));
+
+            flourCauldronTable.withPool(blockStatePool(BananaBlocks.FLOUR_CAULDRON.get()
+                    .defaultBlockState()
+                    .setValue(FlourCauldronBlock.LEVEL,i), BananaItems.FLOUR.get(), FlourCauldronBlock.LEVEL));
         }
         add(BananaBlocks.FLOUR_BLOCK.get(), flourTable);
+        add(BananaBlocks.FLOUR_CAULDRON.get(), flourCauldronTable);
     }
 
     private LootPool.Builder blockStatePool(BlockState state, Item item, Property<Integer> property){

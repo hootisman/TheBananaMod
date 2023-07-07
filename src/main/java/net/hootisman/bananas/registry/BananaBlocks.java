@@ -23,7 +23,7 @@ public class BananaBlocks {
     public static final RegistryObject<Block> BANANA_BLOCK = registerBlockAndItem("banana_block", BananaBlock::new);
     public static final RegistryObject<Block> BANANA_MUSH_BLOCK = BLOCKS.register("banana_mush_block", BananaMushBlock::new);
     public static final RegistryObject<Block> FLOUR_BLOCK = BLOCKS.register("flour_block", FlourBlock::new);
-    public static final RegistryObject<Block> FLOUR_CAULDRON = BLOCKS.register("flour_cauldron_block", () -> new FlourCauldronBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON), FlourCauldronBlock.FLOUR));
+    public static final RegistryObject<Block> FLOUR_CAULDRON = BLOCKS.register("flour_cauldron_block", FlourCauldronBlock::new);
     public static void register (IEventBus b){
         BLOCKS.register(b);
     }
