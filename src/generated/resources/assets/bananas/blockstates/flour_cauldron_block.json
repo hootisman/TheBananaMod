@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "layers=1": {
+      "model": "bananas:block/flour_cauldron_height5"
+    },
+    "layers=2": {
+      "model": "bananas:block/flour_cauldron_height6"
+    },
+    "layers=3": {
+      "model": "bananas:block/flour_cauldron_height8"
+    },
+    "layers=4": {
+      "model": "bananas:block/flour_cauldron_height9"
+    },
+    "layers=5": {
+      "model": "bananas:block/flour_cauldron_height11"
+    },
+    "layers=6": {
+      "model": "bananas:block/flour_cauldron_height12"
+    },
+    "layers=7": {
+      "model": "bananas:block/flour_cauldron_height14"
+    },
+    "layers=8": {
+      "model": "bananas:block/flour_cauldron_height15"
+    }
+  }
+}

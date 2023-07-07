@@ -2,7 +2,10 @@ package net.hootisman.bananas.block;
 
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
+import net.hootisman.bananas.registry.BananaSounds;
 import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
@@ -25,6 +28,7 @@ public class FlourCauldronBlock extends AbstractCauldronBlock {
         if (!level.isClientSide() && canFlourBePlaced(blockState)){
             itemStack.shrink(1);
             level.setBlockAndUpdate(blockPos, BananaBlocks.FLOUR_CAULDRON.get().defaultBlockState().setValue(LEVEL, blockState.is(Blocks.CAULDRON) ? 1 : blockState.getValue(LEVEL) + 1));
+            level.playSound(null,blockPos, SoundEvents.SAND_PLACE, SoundSource.BLOCKS);
             player.awardStat(Stats.FILL_CAULDRON);
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
