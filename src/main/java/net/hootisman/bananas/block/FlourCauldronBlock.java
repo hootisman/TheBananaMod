@@ -1,5 +1,6 @@
 package net.hootisman.bananas.block;
 
+import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.stats.Stats;
@@ -21,9 +22,9 @@ import java.util.Map;
 public class FlourCauldronBlock extends AbstractCauldronBlock {
     public static final IntegerProperty LEVEL = BlockStateProperties.LAYERS;
     private static final CauldronInteraction FILL_USING_FLOUR = (blockState, level, blockPos, player, hand, itemStack) -> {
-        if (!level.isClientSide() && blockState.getValue(LEVEL) != 8){
+        if (!level.isClientSide() && canFlourBePlaced(blockState)){
             itemStack.shrink(1);
-            level.setBlockAndUpdate(blockPos, blockState.setValue(LEVEL, blockState.getValue(LEVEL) + 1));
+            level.setBlockAndUpdate(blockPos, BananaBlocks.FLOUR_CAULDRON.get().defaultBlockState().setValue(LEVEL, blockState.is(Blocks.CAULDRON) ? 1 : blockState.getValue(LEVEL) + 1));
             player.awardStat(Stats.FILL_CAULDRON);
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
@@ -36,6 +37,7 @@ public class FlourCauldronBlock extends AbstractCauldronBlock {
     @SubscribeEvent
     public static void addCauldronInteractions(FMLCommonSetupEvent event){
         event.enqueueWork(() -> FLOUR_INTERACT.put(BananaItems.FLOUR.get(), FILL_USING_FLOUR));
+        event.enqueueWork(() -> CauldronInteraction.EMPTY.put(BananaItems.FLOUR.get(), FILL_USING_FLOUR));
     }
 
     @Override
@@ -46,5 +48,9 @@ public class FlourCauldronBlock extends AbstractCauldronBlock {
     @Override
     public boolean isFull(BlockState state) {
         return state.getValue(LEVEL) == 8;
+    }
+
+    private static boolean canFlourBePlaced(BlockState state){
+        return state.is(Blocks.CAULDRON) || (state.is(BananaBlocks.FLOUR_CAULDRON.get()) && state.getValue(LEVEL) != 8);
     }
 }
