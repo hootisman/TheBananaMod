@@ -14,7 +14,9 @@ public class DoughBlockEntity extends BlockEntity {
     public DoughBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BananaBlockEntities.DOUGH_BLOCK_ENTITY.get(), blockPos, blockState);
     }
-
+    public byte getYeastContent(){
+        return yeastContent;
+    }
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         nbt.putByte("yeast",yeastContent);

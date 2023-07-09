@@ -2,6 +2,7 @@ package net.hootisman.bananas;
 
 import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.block.FlourCauldronBlock;
+import net.hootisman.bananas.item.DoughBowlItem;
 import net.hootisman.bananas.registry.*;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraftforge.common.MinecraftForge;
@@ -32,14 +33,7 @@ public class BananaCore
         BananaBlockEntities.register(modEventBus);
         modEventBus.addListener(FlourCauldronBlock::addCauldronInteractions);
 
+        MinecraftForge.EVENT_BUS.addListener(DoughBowlItem::onBowlUse);
         MinecraftForge.EVENT_BUS.register(this);
     }
-
-
-
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
-    {
-    }
-
 }
