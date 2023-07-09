@@ -22,34 +22,46 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.slf4j.Logger;
 
+import java.util.Optional;
+
 public class FlourItem extends Item {
-
-    private static Logger LOGGER = LogUtils.getLogger();
-
     public FlourItem() {
         super(new Item.Properties());
     }
-
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        Level level = context.getLevel();
-        BlockState hitBlock = level.getBlockState(context.getClickedPos());
-        BlockState hitBlockNeighbor = level.getBlockState(context.getClickedPos().relative(context.getClickedFace()));
+        boolean flag = tryPlaceFlour(context.getPlayer(),
+                context.getLevel(),
+                context.getLevel().getBlockState(context.getClickedPos()),
+                context.getClickedPos(),
+                context.getLevel().getBlockState(context.getClickedPos().relative(context.getClickedFace())),
+                context.getClickedPos().relative(context.getClickedFace()),
+                context.getItemInHand());
 
-
-        boolean flag = false;
-        if (canBlockAddFlour(hitBlock) && context.getPlayer() != null && !context.getPlayer().isShiftKeyDown()){
-            flag = changeBlockState(level, context.getClickedPos(), hitBlock.setValue(FlourBlock.LAYERS,Math.min(8,hitBlock.getValue(FlourBlock.LAYERS) + 1)), context.getItemInHand());
-        } else if (canBlockAddFlour(hitBlockNeighbor)) {
-            flag = changeBlockState(level, context.getClickedPos().relative(context.getClickedFace()), hitBlockNeighbor.setValue(FlourBlock.LAYERS,Math.min(8,hitBlockNeighbor.getValue(FlourBlock.LAYERS) + 1)), context.getItemInHand());
-        } else if (hitBlockNeighbor.isAir()) {
-            flag = changeBlockState(level, context.getClickedPos().relative(context.getClickedFace()), BananaBlocks.FLOUR_BLOCK.get().defaultBlockState(), context.getItemInHand());
-        }
-
-        return flag ? InteractionResult.sidedSuccess(level.isClientSide) : InteractionResult.FAIL;
+        return flag ? InteractionResult.sidedSuccess(context.getLevel().isClientSide()) : InteractionResult.FAIL;
     }
+    private boolean tryPlaceFlour(Player player, Level level, BlockState hitBlock, BlockPos hitPos, BlockState neighborBlock, BlockPos neighborPos, ItemStack stack){
+       if (player == null) return false;
 
-    private boolean changeBlockState(Level level, BlockPos pos,BlockState state, ItemStack item){
+       BlockPos posToPlace = null;
+       BlockState stateToPlace = null;
+       if (canBlockAddFlour(hitBlock) && !player.isShiftKeyDown()){
+            posToPlace = hitPos;
+            stateToPlace = incrementLayer(hitBlock);
+       } else if (canBlockAddFlour(neighborBlock)) {
+            posToPlace = neighborPos;
+            stateToPlace = incrementLayer(neighborBlock);
+       } else if (neighborBlock.isAir()) {
+           posToPlace = neighborPos;
+           stateToPlace = BananaBlocks.FLOUR_BLOCK.get().defaultBlockState();
+       }
+
+       return posToPlace != null && changeBlockState(level, posToPlace, stateToPlace, stack);
+    }
+    private BlockState incrementLayer(BlockState state){
+        return state.setValue(FlourBlock.LAYERS,Math.min(8,state.getValue(FlourBlock.LAYERS) + 1));
+    }
+    private boolean changeBlockState(Level level, BlockPos pos, BlockState state, ItemStack item){
         item.shrink(1);
         level.playSound(null,pos, SoundEvents.SAND_PLACE, SoundSource.BLOCKS);
         return level.setBlockAndUpdate(pos,state);
