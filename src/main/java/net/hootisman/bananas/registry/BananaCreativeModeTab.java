@@ -29,6 +29,7 @@ public class BananaCreativeModeTab {
                     output.accept(new ItemStack(BananaItems.BURNT_BANANA_PICKAXE.get()));
                     output.accept(new ItemStack(BananaItems.BANANA_BOOTS.get()));
                     output.accept(new ItemStack(BananaItems.FLOUR.get()));
+                    output.accept(new ItemStack(BananaItems.DOUGH_BOWL.get()));
                 }).build();
     });
 

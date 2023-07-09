@@ -18,6 +18,7 @@ public class BananaItems {
     public static final RegistryObject<Item> BURNT_BANANA_PICKAXE = ITEMS.register("burnt_banana_pickaxe", BurntBananaPickaxeItem::new);
     public static final RegistryObject<Item> BANANA_BOOTS = ITEMS.register("banana_boots", BananaBootsItem::new);
     public static final RegistryObject<Item> FLOUR = ITEMS.register("flour", FlourItem::new);
+    public static final RegistryObject<Item> DOUGH_BOWL = ITEMS.register("dough_bowl",DoughBowlItem::new);
 
 
     public static void register(IEventBus b){

@@ -1,10 +1,7 @@
 package net.hootisman.bananas.registry;
 
 import net.hootisman.bananas.BananaCore;
-import net.hootisman.bananas.block.BananaBlock;
-import net.hootisman.bananas.block.BananaMushBlock;
-import net.hootisman.bananas.block.FlourBlock;
-import net.hootisman.bananas.block.FlourCauldronBlock;
+import net.hootisman.bananas.block.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -24,6 +21,7 @@ public class BananaBlocks {
     public static final RegistryObject<Block> BANANA_MUSH_BLOCK = BLOCKS.register("banana_mush_block", BananaMushBlock::new);
     public static final RegistryObject<Block> FLOUR_BLOCK = BLOCKS.register("flour_block", FlourBlock::new);
     public static final RegistryObject<Block> FLOUR_CAULDRON = BLOCKS.register("flour_cauldron_block", FlourCauldronBlock::new);
+    public static final RegistryObject<Block> DOUGH_BLOCK = BLOCKS.register("dough_block", DoughBlock::new);
     public static void register (IEventBus b){
         BLOCKS.register(b);
     }

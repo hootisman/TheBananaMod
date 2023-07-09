@@ -2,11 +2,7 @@ package net.hootisman.bananas;
 
 import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.block.FlourCauldronBlock;
-import net.hootisman.bananas.registry.BananaCreativeModeTab;
-import net.hootisman.bananas.registry.BananaBlocks;
-import net.hootisman.bananas.registry.BananaItems;
-import net.hootisman.bananas.registry.BananaLootModifiers;
-import net.hootisman.bananas.registry.BananaSounds;
+import net.hootisman.bananas.registry.*;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -33,6 +29,7 @@ public class BananaCore
         BananaLootModifiers.register(modEventBus);
         BananaSounds.register(modEventBus);
         BananaCreativeModeTab.register(modEventBus);
+        BananaBlockEntities.register(modEventBus);
         modEventBus.addListener(FlourCauldronBlock::addCauldronInteractions);
 
         MinecraftForge.EVENT_BUS.register(this);
