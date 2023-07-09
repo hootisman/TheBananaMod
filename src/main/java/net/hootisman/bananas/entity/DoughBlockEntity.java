@@ -36,10 +36,15 @@ public class DoughBlockEntity extends BlockEntity {
         entity.ticks++;
         if (entity.ticks >= 200) {
             entity.ticks = 0;
-            entity.yeastContent++;
-            entity.setChanged();
-            LogUtils.getLogger().info("yeast: " + entity.yeastContent);
+            yeastTick(entity);
+//            LogUtils.getLogger().info("yeast: " + entity.yeastContent);
         }
 
+    }
+
+    private static void yeastTick(DoughBlockEntity entity){
+        //what to change entity data every x ticks
+        entity.yeastContent += entity.yeastContent < Byte.MAX_VALUE ? 1 : 0;
+        entity.setChanged();
     }
 }
