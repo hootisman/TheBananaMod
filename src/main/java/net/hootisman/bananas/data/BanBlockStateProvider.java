@@ -24,6 +24,7 @@ public class BanBlockStateProvider extends BlockStateProvider {
         simpleLayerBlock(BananaBlocks.BANANA_MUSH_BLOCK.get(),"banana_mush_block", BananaMushBlock.BLOCK_HEIGHT);
         flourLayerBlock(BananaBlocks.FLOUR_BLOCK.get());
         flourCauldronBlock(BananaBlocks.FLOUR_CAULDRON.get());
+        simpleBlock(BananaBlocks.DOUGH_BLOCK.get());
     }
     private void flourCauldronBlock(Block block){
         int height = 3;

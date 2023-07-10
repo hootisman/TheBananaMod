@@ -1,7 +1,8 @@
-// 1.20.1	2023-06-14T08:58:18.042123415	Item Models: bananas
+// 1.20.1	2023-07-10T01:42:24.23389644	Item Models: bananas
 08d7bde04580c9240025a3ed1a95ea197c464bf4 assets/bananas/models/item/banana.json
 09fc1039f8ce93b4f80f74059b525cd5b1c8f261 assets/bananas/models/item/banana_boots.json
 c04223668e04b4fa93c49c30d10f385c6f7b7000 assets/bananas/models/item/banana_bundle.json
 2827d5d138a6e6f2497e0bc17e12db443782cfb6 assets/bananas/models/item/banana_pickaxe.json
 834a7130dec712598aa62e711be87c1c8b9cacf8 assets/bananas/models/item/burnt_banana_pickaxe.json
+5a1b311b32957aacf402005282319826a83d0c96 assets/bananas/models/item/dough_bowl.json
 ca162fc403a18bb4789f200fb08684f03490a71f assets/bananas/models/item/flour.json
