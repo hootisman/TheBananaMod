@@ -21,14 +21,13 @@ public class DoughBlockEntity extends BlockEntity {
     public DoughBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BananaBlockEntities.DOUGH_BLOCK_ENTITY.get(), blockPos, blockState);
     }
-    public void setIngredientsContent(short flour, short water, byte yeast, byte salt){
-        flourContent = flour;
-        waterContent = water;
-        yeastContent = yeast;
-        saltContent = salt;
+    public void loadIngredientsContent(CompoundTag tag){
+        flourContent = tag.getShort("flour");
+        waterContent = tag.getShort("water");
+        yeastContent = tag.getByte("yeast");
+        saltContent = tag.getByte("salt");
     }
-    public CompoundTag getIngredientsContent(){
-        CompoundTag tag = new CompoundTag();
+    public CompoundTag saveIngredientsContent(CompoundTag tag){
         tag.putShort("flour",flourContent);
         tag.putShort("water",waterContent);
         tag.putByte("yeast",yeastContent);
@@ -38,20 +37,13 @@ public class DoughBlockEntity extends BlockEntity {
     }
     @Override
     protected void saveAdditional(CompoundTag nbt) {
-        nbt.putShort("flour",flourContent);
-        nbt.putShort("water",waterContent);
-        nbt.putByte("yeast",yeastContent);
-        nbt.putByte("salt",saltContent);
-        super.saveAdditional(nbt);
+        super.saveAdditional(saveIngredientsContent(nbt));
     }
 
     @Override
     public void load(CompoundTag nbt) {
         super.load(nbt);
-        flourContent = nbt.getShort("flour");
-        waterContent = nbt.getShort("water");
-        yeastContent = nbt.getByte("yeast");
-        saltContent = nbt.getByte("salt");
+        loadIngredientsContent(nbt);
     }
 
 

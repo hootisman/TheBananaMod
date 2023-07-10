@@ -40,11 +40,7 @@ public class DoughBowlItem extends Item {
         if (player != null && player.isShiftKeyDown()){
             DoughBlockEntity dough = BananaBlockEntities.DOUGH_BLOCK_ENTITY.get().create(pos,BananaBlocks.DOUGH_BLOCK.get().defaultBlockState());
             CompoundTag tag = stack.getTag();
-            if (dough != null && tag != null) dough.setIngredientsContent(
-                    tag.getShort("flour"),
-                    tag.getShort("water"),
-                    tag.getByte("yeast"),
-                    tag.getByte("salt"));
+            if (dough != null && tag != null) dough.loadIngredientsContent(tag);
 
             result = swapItemAndBlock(player,level,pos,hand,new ItemStack(Items.BOWL), dough.getBlockState());
             level.setBlockEntity(dough);
@@ -64,7 +60,7 @@ public class DoughBowlItem extends Item {
         Optional<DoughBlockEntity> dough;
         if(stack.is(Items.BOWL) && (dough = level.getBlockEntity(pos, BananaBlockEntities.DOUGH_BLOCK_ENTITY.get())).isPresent()){
             ItemStack doughBowl = new ItemStack(BananaItems.DOUGH_BOWL.get());
-            doughBowl.setTag(dough.get().getIngredientsContent());
+            doughBowl.setTag(dough.get().saveIngredientsContent(new CompoundTag()));
 
             return swapItemAndBlock(player,level,pos,hand,doughBowl,Blocks.AIR.defaultBlockState());
         }
