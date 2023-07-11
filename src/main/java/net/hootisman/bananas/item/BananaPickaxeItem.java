@@ -21,6 +21,6 @@ public class BananaPickaxeItem extends PickaxeItem {
     public ItemStack finishUsingItem(ItemStack item, Level level, LivingEntity livingentity) {
         //basically BowlFoodItem code
         ItemStack itemstack = super.finishUsingItem(item,level,livingentity);
-        return (livingentity instanceof Player && ((Player)livingentity).getAbilities().instabuild) ? itemstack : new ItemStack(Items.STICK);
+        return (livingentity instanceof Player player && player.getAbilities().instabuild) ? itemstack : new ItemStack(Items.STICK);
     }
 }
