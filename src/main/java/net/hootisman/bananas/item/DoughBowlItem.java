@@ -1,6 +1,5 @@
 package net.hootisman.bananas.item;
 
-import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.hootisman.bananas.registry.BananaBlocks;
