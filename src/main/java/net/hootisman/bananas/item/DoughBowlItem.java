@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +26,22 @@ public class DoughBowlItem extends Item {
 
     public DoughBowlItem() {
         super(new Properties().stacksTo(1));
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
+        if (!stack.hasTag() || !stack.getTag().contains("ticks") || !stack.getTag().contains("yeast")) return;
+
+        CompoundTag tag = stack.getTag();
+        short ticks = (short) (tag.getShort("ticks") + 1);
+        ticks = DoughBlockEntity.tickChecker(ticks);
+        byte yeast;
+        if(ticks == 0 && (yeast = tag.getByte("yeast")) < Byte.MAX_VALUE){
+            tag.putByte("yeast", (byte) (yeast + 1));
+        }
+
+        tag.putShort("ticks",ticks);
+        stack.setTag(tag);
     }
 
     @Override

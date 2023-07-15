@@ -1,6 +1,5 @@
 package net.hootisman.bananas.entity;
 
-import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -11,7 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class DoughBlockEntity extends BlockEntity {
-    private static final short YEAST_TICK = 200;      //after x amount of ticks when to increment yeast
+    public static final short YEAST_TICK = 200;      //after x amount of ticks when to increment yeast
     private short flourContent = 0;
     private short waterContent = 0;
     private byte yeastContent = 0;
@@ -22,12 +21,14 @@ public class DoughBlockEntity extends BlockEntity {
         super(BananaBlockEntities.DOUGH_BLOCK_ENTITY.get(), blockPos, blockState);
     }
     public void loadIngredientsContent(CompoundTag tag){
+        ticks = tag.getShort("ticks");
         flourContent = tag.getShort("flour");
         waterContent = tag.getShort("water");
         yeastContent = tag.getByte("yeast");
         saltContent = tag.getByte("salt");
     }
     public CompoundTag saveIngredientsContent(CompoundTag tag){
+        tag.putShort("ticks",ticks);
         tag.putShort("flour",flourContent);
         tag.putShort("water",waterContent);
         tag.putByte("yeast",yeastContent);
@@ -51,23 +52,24 @@ public class DoughBlockEntity extends BlockEntity {
         if (level.isClientSide()) return;
 
         entity.ticks++;
-        if (entity.ticks >= YEAST_TICK) {
-            entity.ticks = 0;
-            if(yeastTick(entity)){
-                level.playSound(null,blockPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS);
-            }
-            LogUtils.getLogger().info("yeast: " + entity.yeastContent);
+        entity.ticks = tickChecker(entity.ticks);
+        if (entity.ticks == 0) {
+            doYeastTick(entity, level, blockPos);
+//            LogUtils.getLogger().info("yeast: " + entity.yeastContent);
         }
 
     }
 
-    private static boolean yeastTick(DoughBlockEntity entity){
+    public static short tickChecker(short tick){
+        return tick >= YEAST_TICK ? 0 : tick;
+    }
+
+    private static void doYeastTick(DoughBlockEntity entity, Level level, BlockPos blockPos){
         //what to change entity data every x ticks
         if (entity.yeastContent < Byte.MAX_VALUE){
             entity.yeastContent++;
             entity.setChanged();
-            return true;
+            level.playSound(null,blockPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS);
         }
-        return false;
     }
 }
