@@ -1,5 +1,6 @@
 package net.hootisman.bananas.item;
 
+import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.hootisman.bananas.registry.BananaBlocks;
@@ -30,18 +31,18 @@ public class DoughBowlItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
-        if (!stack.hasTag() || !stack.getTag().contains("ticks") || !stack.getTag().contains("yeast")) return;
+        if (!stack.hasTag() || !stack.getTag().contains("time") || !stack.getTag().contains("yeast")) return;
 
         CompoundTag tag = stack.getTag();
-        short ticks = (short) (tag.getShort("ticks") + 1);
-        ticks = DoughBlockEntity.tickChecker(ticks);
+        long lastTickTime = tag.getLong("time");
         byte yeast;
-        if(ticks == 0 && (yeast = tag.getByte("yeast")) < Byte.MAX_VALUE){
+        if(DoughBlockEntity.hasYeastFermented(level.getGameTime(), lastTickTime) && (yeast = tag.getByte("yeast")) < Byte.MAX_VALUE){
             tag.putByte("yeast", (byte) (yeast + 1));
+            tag.putLong("time",level.getGameTime());
+            stack.setTag(tag);
+//            LogUtils.getLogger().info("clientside? "+ level.isClientSide + " gametime " + level.getGameTime());
         }
 
-        tag.putShort("ticks",ticks);
-        stack.setTag(tag);
     }
 
     @Override
