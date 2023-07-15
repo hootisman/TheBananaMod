@@ -3,7 +3,9 @@ package net.hootisman.bananas.entity;
 import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
@@ -11,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class DoughBlockEntity extends BlockEntity {
-    public static final short YEAST_TICK = 200;      //after x amount of ticks when to increment yeast
+    public static final int YEAST_TICK = 200;      //after x amount of ticks when to increment yeast
     private long lastTickTime = 0;
     private short flourContent = 0;
     private short waterContent = 0;
@@ -52,6 +54,7 @@ public class DoughBlockEntity extends BlockEntity {
         if (level.isClientSide()) return;
 
         if (hasYeastFermented(level.getGameTime(), entity.lastTickTime)) {
+            LogUtils.getLogger().info("test of randomness! new tick till ferment is: " + level.random.nextIntBetweenInclusive(0,YEAST_TICK));
             doYeastFerment(entity, level, blockPos);
         }
 
@@ -68,6 +71,7 @@ public class DoughBlockEntity extends BlockEntity {
         if (entity.yeastContent < Byte.MAX_VALUE){
             entity.yeastContent++;
             entity.setChanged();
+            ((ServerLevel)level).sendParticles(ParticleTypes.BUBBLE,blockPos.getX() + level.random.nextDouble(),blockPos.getY() + 1.05f,blockPos.getZ() + level.random.nextDouble(),1, 0.0f,0.01f,0.0f,0.0f);
             level.playSound(null,blockPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS);
         }
     }

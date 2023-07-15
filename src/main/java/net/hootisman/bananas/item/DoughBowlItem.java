@@ -40,7 +40,6 @@ public class DoughBowlItem extends Item {
             tag.putByte("yeast", (byte) (yeast + 1));
             tag.putLong("time",level.getGameTime());
             stack.setTag(tag);
-//            LogUtils.getLogger().info("clientside? "+ level.isClientSide + " gametime " + level.getGameTime());
         }
 
     }
