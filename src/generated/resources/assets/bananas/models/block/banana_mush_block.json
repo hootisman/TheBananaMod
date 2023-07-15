@@ -35,7 +35,7 @@
     }
   ],
   "textures": {
-    "particle": "bananas:block/flour_block",
-    "texture": "bananas:block/flour_block"
+    "particle": "bananas:block/banana_mush_block",
+    "texture": "bananas:block/banana_mush_block"
   }
 }

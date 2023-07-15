@@ -48,7 +48,7 @@ public class BanBlockStateProvider extends BlockStateProvider {
     private void simpleLayerBlock(Block block, String blockName ,float height){
 
         getVariantBuilder(block).partialState().setModels(
-                addLayerModel(new ResourceLocation("block/thin_block"),blockName, modLoc("block/flour_block"),height)
+                addLayerModel(new ResourceLocation("block/thin_block"),blockName, modLoc("block/"+blockName),height)
         );
 
     }

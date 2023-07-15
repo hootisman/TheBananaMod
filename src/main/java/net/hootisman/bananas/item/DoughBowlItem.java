@@ -5,6 +5,7 @@ import net.hootisman.bananas.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
+import net.hootisman.bananas.util.DoughUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -35,11 +36,12 @@ public class DoughBowlItem extends Item {
 
         CompoundTag tag = stack.getTag();
         long lastTickTime = tag.getLong("time");
-        byte yeast;
-        if(DoughBlockEntity.hasYeastFermented(level.getGameTime(), lastTickTime) && (yeast = tag.getByte("yeast")) < Byte.MAX_VALUE){
-            tag.putByte("yeast", (byte) (yeast + 1));
+        short yeast;
+        if(DoughUtils.hasYeastFermented(level.getGameTime(), lastTickTime) && DoughUtils.canYeastGrow(yeast = tag.getShort("yeast"))){
+            tag.putShort("yeast", (short) (yeast + 1));
             tag.putLong("time",level.getGameTime());
             stack.setTag(tag);
+            if (selected) DoughUtils.playYeastSound(level,entity.blockPosition());
         }
 
     }
@@ -51,6 +53,7 @@ public class DoughBowlItem extends Item {
         return result ? InteractionResult.sidedSuccess(context.getLevel().isClientSide()) : InteractionResult.FAIL;
     }
     private boolean tryPlaceDough(Player player, Level level, BlockPos pos, InteractionHand hand, ItemStack stack){
+        //used in 'useOn'
         if (level.isClientSide()) return true;
 
         boolean result = false;
@@ -72,6 +75,7 @@ public class DoughBowlItem extends Item {
     }
 
     private static boolean tryPickupDough(Player player, Level level, BlockPos pos, InteractionHand hand, ItemStack stack){
+        //used in 'onBowlUse"
         if (level.isClientSide()) return false;
 
         Optional<DoughBlockEntity> dough;
