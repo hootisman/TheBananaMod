@@ -15,5 +15,6 @@ public class BananaEvents {
         //enqueue cauldron interactions
         event.enqueueWork(() -> CauldronUtils.FLOUR_INTERACT.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_USING_FLOUR));
         event.enqueueWork(() -> CauldronInteraction.EMPTY.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_USING_FLOUR));
+        event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(BananaItems.DOUGH_BOWL.get(), CauldronUtils.FILL_USING_DOUGH));
     }
 }

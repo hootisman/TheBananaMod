@@ -31,7 +31,7 @@ public class DoughBowlItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
-        if (!stack.hasTag() || !stack.getTag().contains("time") || !stack.getTag().contains("yeast")) return;
+        if(!DoughUtils.hasDoughTag(stack)) return;
 
         CompoundTag tag = stack.getTag();
         long lastTickTime = tag.getLong("time");
