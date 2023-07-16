@@ -5,6 +5,7 @@ import net.hootisman.bananas.block.FlourCauldronBlock;
 import net.hootisman.bananas.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.hootisman.bananas.registry.BananaBlocks;
+import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -36,7 +37,16 @@ public class CauldronUtils {
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     };
-
+    public static final CauldronInteraction EMPTY_FLOUR = (blockState, level, blockPos, player, hand, stack) -> {
+        if (!level.isClientSide() && stack.isEmpty()){
+            ItemStack flour = new ItemStack(BananaItems.FLOUR.get());
+            flour.setCount(blockState.getValue(FlourCauldronBlock.LEVEL));
+            player.getInventory().add(flour);
+            level.setBlockAndUpdate(blockPos,Blocks.CAULDRON.defaultBlockState());
+            level.playSound(null, blockPos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS);
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide());
+    };
     public static final CauldronInteraction FILL_USING_DOUGH = (blockState, level, blockPos, player, hand, stack) -> {
         if (!level.isClientSide() && DoughUtils.hasDoughTag(stack)){
             DoughBlockEntity dough = DoughUtils.placeDough(blockPos,stack.getTag(),
