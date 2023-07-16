@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.block.FlourBlock;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
+import net.hootisman.bananas.util.SettableBlockState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;

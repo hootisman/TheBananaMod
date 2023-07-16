@@ -25,6 +25,11 @@ public class BanBlockStateProvider extends BlockStateProvider {
         flourLayerBlock(BananaBlocks.FLOUR_BLOCK.get());
         flourCauldronBlock(BananaBlocks.FLOUR_CAULDRON.get());
         simpleBlock(BananaBlocks.DOUGH_BLOCK.get());
+
+        getVariantBuilder(BananaBlocks.DOUGH_CAULDRON.get()).partialState()
+                .setModels(cauldronBlock(models().withExistingParent("dough_cauldron",mcLoc("block/cauldron"))
+                        .texture("content",modLoc("block/dough_block"))
+                        .element().face(Direction.UP).tintindex(0).texture("#content").end().from(2,4,2).to(14,15,14).end()));
     }
     private void flourCauldronBlock(Block block){
         int height = 3;

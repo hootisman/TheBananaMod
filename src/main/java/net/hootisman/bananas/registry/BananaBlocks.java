@@ -22,6 +22,7 @@ public class BananaBlocks {
     public static final RegistryObject<Block> FLOUR_BLOCK = BLOCKS.register("flour_block", FlourBlock::new);
     public static final RegistryObject<Block> FLOUR_CAULDRON = BLOCKS.register("flour_cauldron_block", FlourCauldronBlock::new);
     public static final RegistryObject<Block> DOUGH_BLOCK = BLOCKS.register("dough_block", DoughBlock::new);
+    public static final RegistryObject<Block> DOUGH_CAULDRON = BLOCKS.register("dough_cauldron_block", DoughCauldronBlock::new);
     public static void register (IEventBus b){
         BLOCKS.register(b);
     }

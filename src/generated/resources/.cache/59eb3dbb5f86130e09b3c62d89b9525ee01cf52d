@@ -1,5 +1,6 @@
-// 1.20.1	2023-07-06T23:17:37.313694153	Loot Tables
+// 1.20.1	2023-07-15T23:04:03.803329879	Loot Tables
 2ceed9db91ab25c6847982954104fe6ebf646f93 data/bananas/loot_tables/blocks/banana_block.json
 5a88b39f4f40488fafd44963719f282b9736c19e data/bananas/loot_tables/blocks/banana_mush_block.json
+cd23dd1b07a795bb357f0bfc081b79d027df5a8d data/bananas/loot_tables/blocks/dough_cauldron_block.json
 825aacb8b6b1104ec80f1b5e42edbd90ce0db90f data/bananas/loot_tables/blocks/flour_block.json
 bad69d7586ddadcc1c33b4f07711ea4ec2d4a170 data/bananas/loot_tables/blocks/flour_cauldron_block.json

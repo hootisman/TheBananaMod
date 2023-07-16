@@ -1,4 +1,4 @@
-package net.hootisman.bananas.entity;
+package net.hootisman.bananas.util;
 
 import net.minecraft.world.level.block.state.BlockState;
 

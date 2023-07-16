@@ -1,6 +1,6 @@
 package net.hootisman.bananas.mixin;
 
-import net.hootisman.bananas.entity.SettableBlockState;
+import net.hootisman.bananas.util.SettableBlockState;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
