@@ -56,13 +56,14 @@ public class DoughBowlItem extends Item {
         if (level.isClientSide()) return true;
 
         boolean result = false;
-        if (player != null && player.isShiftKeyDown()){
-            DoughBlockEntity dough = BananaBlockEntities.DOUGH_BLOCK_ENTITY.get().create(pos,BananaBlocks.DOUGH_BLOCK.get().defaultBlockState());
-            CompoundTag tag = stack.getTag();
-            if (dough != null && tag != null) dough.loadIngredientsContent(tag);
+        if (DoughUtils.hasDoughTag(stack) && player.isShiftKeyDown()){
+            DoughBlockEntity dough = DoughUtils.placeDough(pos,stack.getTag(),
+                    BananaBlockEntities.DOUGH_BLOCK_ENTITY.get(),
+                    BananaBlocks.DOUGH_BLOCK.get().defaultBlockState(),
+                    (BlockState doughState) -> DoughUtils.swapItemAndBlock(player,level,pos,hand,new ItemStack(Items.BOWL), doughState));
 
-            result = swapItemAndBlock(player,level,pos,hand,new ItemStack(Items.BOWL), dough.getBlockState());
             level.setBlockEntity(dough);
+            result = true;
         }
         return result;
     }
@@ -82,13 +83,10 @@ public class DoughBowlItem extends Item {
             ItemStack doughBowl = new ItemStack(BananaItems.DOUGH_BOWL.get());
             doughBowl.setTag(dough.get().saveIngredientsContent(new CompoundTag()));
 
-            return swapItemAndBlock(player,level,pos,hand,doughBowl,Blocks.AIR.defaultBlockState());
+            DoughUtils.swapItemAndBlock(player,level,pos,hand,doughBowl,Blocks.AIR.defaultBlockState());
+            return true;
         }
         return false;
     }
 
-    private static boolean swapItemAndBlock(Player player, Level level, BlockPos pos, InteractionHand hand, ItemStack stack, BlockState state){
-        player.setItemInHand(hand,stack);
-        return level.setBlockAndUpdate(pos,state);
-    }
 }

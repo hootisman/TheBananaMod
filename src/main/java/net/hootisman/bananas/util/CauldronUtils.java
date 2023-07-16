@@ -1,5 +1,6 @@
 package net.hootisman.bananas.util;
 
+import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.block.FlourCauldronBlock;
 import net.hootisman.bananas.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaBlockEntities;
@@ -11,6 +12,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -35,11 +38,14 @@ public class CauldronUtils {
     };
 
     public static final CauldronInteraction FILL_USING_DOUGH = (blockState, level, blockPos, player, hand, stack) -> {
-
         if (!level.isClientSide() && DoughUtils.hasDoughTag(stack)){
-            CompoundTag tag = stack.getTag();
+            DoughBlockEntity dough = DoughUtils.placeDough(blockPos,stack.getTag(),
+                    BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get(),
+                    BananaBlocks.DOUGH_CAULDRON.get().defaultBlockState(),
+                    (BlockState doughState) -> DoughUtils.swapItemAndBlock(player,level,blockPos,hand,new ItemStack(Items.BOWL),doughState));
 
-//            DoughBlockEntity dough = BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get().create(blockPos,blockState);
+            level.setBlockEntity(dough);
+            player.awardStat(Stats.FILL_CAULDRON);
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     };
