@@ -14,7 +14,10 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -62,12 +65,31 @@ public class CauldronUtils {
     public static final CauldronInteraction EMPTY_DOUGH = (blockState, level, blockPos, player, hand, stack) -> {
         Optional<DoughBlockEntity> dough;
         if (!level.isClientSide() && (dough = level.getBlockEntity(blockPos,BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get())).isPresent()){
-            DoughUtils.pickupDough(dough.get(),
+            DoughUtils.pickupDough(stack,player,dough.get(),
                     (ItemStack doughBowl) -> DoughUtils.swapItemAndBlock(player,level,blockPos,hand,doughBowl,Blocks.CAULDRON.defaultBlockState()));
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     };
 
+    public static final CauldronInteraction MIX_FLOUR = (blockState, level, blockPos, player, hand, stack) -> {
+        //right click flour in water cauldron
+        return InteractionResult.sidedSuccess(level.isClientSide());
+    };
+
+    public static final CauldronInteraction MIX_WATER = (blockState, level, blockPos, player, hand, stack) -> {
+        //right click water in flour cauldron
+        if (!level.isClientSide() && PotionUtils.getPotion(stack) == Potions.WATER){
+
+            DoughBlockEntity dough = DoughUtils.placeDough(blockPos,null,
+                    BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get(),
+                    BananaBlocks.DOUGH_CAULDRON.get().defaultBlockState(),
+                    (BlockState doughState) -> DoughUtils.swapItemAndBlock(player,level,blockPos,hand, ItemUtils.createFilledResult(stack,player,new ItemStack(Items.GLASS_BOTTLE)),doughState));
+            level.setBlockEntity(dough);
+            level.playSound(null,blockPos,SoundEvents.BREWING_STAND_BREW,SoundSource.BLOCKS);
+            player.awardStat(Stats.FILL_CAULDRON);
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide());
+    };
 
     private static boolean canFlourBePlaced(BlockState state){
         return state.is(Blocks.CAULDRON) || (state.is(BananaBlocks.FLOUR_CAULDRON.get()) && state.getValue(FlourCauldronBlock.LEVEL) != 8);

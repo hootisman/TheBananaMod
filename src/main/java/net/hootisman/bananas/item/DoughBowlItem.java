@@ -44,7 +44,6 @@ public class DoughBowlItem extends Item {
         }
 
     }
-
     @Override
     public InteractionResult useOn(UseOnContext context) {
         //filled dough bowl used on ground
@@ -74,7 +73,7 @@ public class DoughBowlItem extends Item {
         boolean result = false;
         Optional<DoughBlockEntity> dough;
         if(!level.isClientSide() && stack.is(Items.BOWL) && (dough = level.getBlockEntity(pos, BananaBlockEntities.DOUGH_BLOCK_ENTITY.get())).isPresent()){
-            DoughUtils.pickupDough(dough.get(),
+            DoughUtils.pickupDough(stack,player,dough.get(),
                     (ItemStack doughBowl) -> DoughUtils.swapItemAndBlock(player,level,pos,hand,doughBowl,Blocks.AIR.defaultBlockState()));
             result = true;
         }
