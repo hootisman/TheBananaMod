@@ -18,13 +18,14 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class DoughUtils {
     public static final int YEAST_TICK = 200;      //after x amount of ticks, ferment yeast once
 
-    public static DoughBlockEntity placeDough(BlockPos blockPos, @Nullable CompoundTag tag, BlockEntityType<DoughBlockEntity> entityToCreate, BlockState stateToCreate, Consumer<BlockState> swapItemBlockFunc){
+    public static DoughBlockEntity placeDough(@Nullable CompoundTag tag, Supplier<DoughBlockEntity> createDoughEntity, Consumer<BlockState> swapItemBlockFunc){
         //places DoughBlockEntity
-        DoughBlockEntity dough = entityToCreate.create(blockPos, stateToCreate);
+        DoughBlockEntity dough = createDoughEntity.get();
         if (dough != null){
             if (tag != null) dough.loadIngredientsContent(tag);
             swapItemBlockFunc.accept(dough.getBlockState());

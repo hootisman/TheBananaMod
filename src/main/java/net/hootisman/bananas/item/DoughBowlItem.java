@@ -35,8 +35,8 @@ public class DoughBowlItem extends Item {
 
         CompoundTag tag = stack.getTag();
         long lastTickTime = tag.getLong("time");
-        short yeast;
-        if(DoughUtils.hasYeastFermented(level.getGameTime(), lastTickTime) && DoughUtils.canYeastGrow(yeast = tag.getShort("yeast"))){
+        short yeast = tag.getShort("yeast");
+        if(DoughUtils.hasYeastFermented(level.getGameTime(), lastTickTime) && DoughUtils.canYeastGrow(yeast)){
             tag.putShort("yeast", (short) (yeast + 1));
             tag.putLong("time",level.getGameTime());
             stack.setTag(tag);
@@ -49,13 +49,12 @@ public class DoughBowlItem extends Item {
         //filled dough bowl used on ground
         return tryPlaceDough(context.getPlayer(),context.getLevel(),context.getClickedPos().relative(context.getClickedFace()),context.getHand(),context.getItemInHand());
     }
-    private InteractionResult tryPlaceDough(Player player, Level level, BlockPos pos, InteractionHand hand, ItemStack stack){
+    private InteractionResult tryPlaceDough(Player player, Level level, BlockPos blockPos, InteractionHand hand, ItemStack stack){
         //used in 'useOn'
         if (!level.isClientSide() && DoughUtils.hasDoughTag(stack) && player.isShiftKeyDown()){
-            DoughBlockEntity dough = DoughUtils.placeDough(pos,stack.getTag(),
-                    BananaBlockEntities.DOUGH_BLOCK_ENTITY.get(),
-                    BananaBlocks.DOUGH_BLOCK.get().defaultBlockState(),
-                    (BlockState doughState) -> DoughUtils.swapItemAndBlock(player,level,pos,hand,new ItemStack(Items.BOWL), doughState));
+            DoughBlockEntity dough = DoughUtils.placeDough(stack.getTag(),
+                    () -> BananaBlockEntities.DOUGH_BLOCK_ENTITY.get().create(blockPos, BananaBlocks.DOUGH_BLOCK.get().defaultBlockState()),
+                    (BlockState doughState) -> DoughUtils.swapItemAndBlock(player,level,blockPos,hand,new ItemStack(Items.BOWL), doughState));
 
             level.setBlockEntity(dough);
         }

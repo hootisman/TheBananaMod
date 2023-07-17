@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 @Mod.EventBusSubscriber(modid = BananaCore.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class BananaEvents {
+public class BananaSetupEvents {
     @SubscribeEvent
     public static void onCommonSetup(FMLCommonSetupEvent event){
         //enqueue cauldron interactions
