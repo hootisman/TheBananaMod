@@ -31,11 +31,15 @@ public class CauldronUtils {
     public static Map<Item, CauldronInteraction> DOUGH_INTERACT = CauldronInteraction.newInteractionMap();
 
     public static final CauldronInteraction FILL_USING_FLOUR = (blockState, level, blockPos, player, hand, stack) -> {
-        if (!level.isClientSide() && canFlourBePlaced(blockState)){
+        if (!level.isClientSide() &&
+                blockState.is(Blocks.CAULDRON) ||
+                (blockState.is(BananaBlocks.FLOUR_CAULDRON.get()) && blockState.getValue(FlourCauldronBlock.LEVEL) != 8)){
             stack.shrink(1);
-            BlockState newFlourCauldron = BananaBlocks.FLOUR_CAULDRON.get().defaultBlockState();
-            level.setBlockAndUpdate(blockPos, newFlourCauldron.setValue(FlourCauldronBlock.LEVEL, blockState.is(Blocks.CAULDRON) ? 1 : blockState.getValue(FlourCauldronBlock.LEVEL) + 1));
-            level.playSound(null,blockPos, SoundEvents.SAND_PLACE, SoundSource.BLOCKS);
+
+            level.setBlockAndUpdate(blockPos, BananaBlocks.FLOUR_CAULDRON.get().defaultBlockState().setValue(FlourCauldronBlock.LEVEL,
+                    blockState.is(Blocks.CAULDRON) ? 1 : blockState.getValue(FlourCauldronBlock.LEVEL) + 1));
+
+            DoughUtils.playSoundHelper(level,blockPos,SoundEvents.SAND_PLACE);
             player.awardStat(Stats.FILL_CAULDRON);
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
@@ -62,8 +66,8 @@ public class CauldronUtils {
         return InteractionResult.sidedSuccess(level.isClientSide());
     };
     public static final CauldronInteraction EMPTY_DOUGH = (blockState, level, blockPos, player, hand, stack) -> {
-        Optional<DoughBlockEntity> dough;
-        if (!level.isClientSide() && (dough = level.getBlockEntity(blockPos,BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get())).isPresent()){
+        Optional<DoughBlockEntity> dough = level.getBlockEntity(blockPos,BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get());
+        if (!level.isClientSide() && dough.isPresent()){
             DoughUtils.pickupDough(stack,player,dough.get(),
                     (ItemStack doughBowl) -> DoughUtils.swapItemAndBlock(player,level,blockPos,hand,doughBowl,Blocks.CAULDRON.defaultBlockState()));
         }
@@ -78,18 +82,16 @@ public class CauldronUtils {
     public static final CauldronInteraction MIX_WATER = (blockState, level, blockPos, player, hand, stack) -> {
         //right click water in flour cauldron
         if (!level.isClientSide() && PotionUtils.getPotion(stack) == Potions.WATER){
-
-            DoughBlockEntity dough = DoughUtils.placeDough(null,
+            CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), 250 * blockState.getValue(FlourCauldronBlock.LEVEL), 250, 0, 0);
+            DoughBlockEntity dough = DoughUtils.placeDough(tag,
                     () -> BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get().create(blockPos,BananaBlocks.DOUGH_CAULDRON.get().defaultBlockState()),
                     (BlockState doughState) -> DoughUtils.swapItemAndBlock(player,level,blockPos,hand, ItemUtils.createFilledResult(stack,player,new ItemStack(Items.GLASS_BOTTLE)),doughState));
+
             level.setBlockEntity(dough);
-            level.playSound(null,blockPos,SoundEvents.BREWING_STAND_BREW,SoundSource.BLOCKS);
+            DoughUtils.playSoundHelper(level,blockPos,SoundEvents.BREWING_STAND_BREW);
             player.awardStat(Stats.FILL_CAULDRON);
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     };
 
-    private static boolean canFlourBePlaced(BlockState state){
-        return state.is(Blocks.CAULDRON) || (state.is(BananaBlocks.FLOUR_CAULDRON.get()) && state.getValue(FlourCauldronBlock.LEVEL) != 8);
-    }
 }

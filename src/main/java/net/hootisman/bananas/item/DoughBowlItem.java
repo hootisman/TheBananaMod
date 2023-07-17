@@ -3,10 +3,10 @@ package net.hootisman.bananas.item;
 import net.hootisman.bananas.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.hootisman.bananas.registry.BananaBlocks;
-import net.hootisman.bananas.registry.BananaItems;
 import net.hootisman.bananas.util.DoughUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -40,7 +40,7 @@ public class DoughBowlItem extends Item {
             tag.putShort("yeast", (short) (yeast + 1));
             tag.putLong("time",level.getGameTime());
             stack.setTag(tag);
-            if (selected) DoughUtils.playYeastSound(level,entity.blockPosition());
+            if (selected) DoughUtils.playSoundHelper(level,entity.blockPosition(), SoundEvents.BUBBLE_COLUMN_BUBBLE_POP);
         }
 
     }

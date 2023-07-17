@@ -6,6 +6,7 @@ import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -42,19 +43,17 @@ public class DoughUtils {
         player.setItemInHand(hand,newStack);
         level.setBlockAndUpdate(pos,newState);
     }
-    public static void playYeastSound(Level level, BlockPos blockPos){
-        level.playSound(null,blockPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS);
+    public static void playSoundHelper(Level level, BlockPos blockPos, SoundEvent soundEvent){
+        level.playSound(null,blockPos, soundEvent, SoundSource.BLOCKS);
     }
-    public static BlockEntityType<DoughBlockEntity> getDoughEntityType(BlockState doughState){
-        BlockEntityType<DoughBlockEntity> doughEntityType = BananaBlockEntities.DOUGH_BLOCK_ENTITY.get();   //default
-        if (doughState.is(BananaBlocks.DOUGH_CAULDRON.get())){
-            doughEntityType = BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get();
-        }
-        return doughEntityType;
-    }
-    public static CompoundTag newDoughTag(){
+    public static CompoundTag saveSpecificContent(long time, int flour, int water, int yeast, int salt){
         CompoundTag tag = new CompoundTag();
-//        tag.pu
+        tag.putLong("time",time);
+        tag.putShort("flour", (short) flour);
+        tag.putShort("water", (short) water);
+        tag.putShort("yeast", (short) yeast);
+        tag.putByte("salt", (byte) salt);
+
         return tag;
     }
     public static boolean canYeastGrow(short yeast){

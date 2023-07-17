@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,7 +20,7 @@ public class DoughBlockEntity extends BlockEntity {
     private short yeastContent = 0;
     private byte saltContent = 0;
     public DoughBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(DoughUtils.getDoughEntityType(blockState),blockPos,blockState);
+        super(getDoughEntityType(blockState),blockPos,blockState);
     }
     public void loadIngredientsContent(CompoundTag tag){
         lastTickTime = tag.getLong("time");
@@ -48,6 +49,13 @@ public class DoughBlockEntity extends BlockEntity {
         loadIngredientsContent(nbt);
     }
 
+    public static BlockEntityType<DoughBlockEntity> getDoughEntityType(BlockState doughState){
+        BlockEntityType<DoughBlockEntity> doughEntityType = BananaBlockEntities.DOUGH_BLOCK_ENTITY.get();   //default
+        if (doughState.is(BananaBlocks.DOUGH_CAULDRON.get())){
+            doughEntityType = BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get();
+        }
+        return doughEntityType;
+    }
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, DoughBlockEntity entity) {
         if (level.isClientSide()) return;
 
@@ -65,7 +73,7 @@ public class DoughBlockEntity extends BlockEntity {
             entity.yeastContent++;
             entity.setChanged();
             ((ServerLevel)level).sendParticles(ParticleTypes.BUBBLE,blockPos.getX() + level.random.nextDouble(),blockPos.getY() + 1.05f,blockPos.getZ() + level.random.nextDouble(),1, 0.0f,0.01f,0.0f,0.0f);
-            DoughUtils.playYeastSound(level, blockPos);
+            DoughUtils.playSoundHelper(level, blockPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP);
         }
     }
 }
