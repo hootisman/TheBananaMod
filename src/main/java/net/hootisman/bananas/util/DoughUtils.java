@@ -3,6 +3,7 @@ package net.hootisman.bananas.util;
 import net.hootisman.bananas.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.hootisman.bananas.registry.BananaBlocks;
+import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -30,7 +31,12 @@ public class DoughUtils {
         }
         return dough;
     }
-
+    public static void pickupDough(DoughBlockEntity dough, Consumer<ItemStack> swapItemBlockFunc){
+        //picks up DoughBlockEntity
+        ItemStack doughBowl = new ItemStack(BananaItems.DOUGH_BOWL.get());
+        doughBowl.setTag(dough.saveIngredientsContent(new CompoundTag()));
+        swapItemBlockFunc.accept(doughBowl);
+    }
     public static void swapItemAndBlock(Player player, Level level, BlockPos pos, InteractionHand hand, ItemStack newStack, BlockState newState){
         player.setItemInHand(hand,newStack);
         level.setBlockAndUpdate(pos,newState);
@@ -46,7 +52,13 @@ public class DoughUtils {
     public static void playYeastSound(Level level, BlockPos blockPos){
         level.playSound(null,blockPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS);
     }
-
+    public static BlockEntityType<DoughBlockEntity> getDoughEntityType(BlockState doughState){
+        BlockEntityType<DoughBlockEntity> doughEntityType = BananaBlockEntities.DOUGH_BLOCK_ENTITY.get();   //default
+        if (doughState.is(BananaBlocks.DOUGH_CAULDRON.get())){
+            doughEntityType = BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get();
+        }
+        return doughEntityType;
+    }
     public static boolean hasDoughTag(ItemStack stack){
         CompoundTag tag;
         return stack.hasTag()

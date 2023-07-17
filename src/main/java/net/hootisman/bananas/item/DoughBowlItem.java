@@ -48,24 +48,19 @@ public class DoughBowlItem extends Item {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         //filled dough bowl used on ground
-        boolean result = tryPlaceDough(context.getPlayer(),context.getLevel(),context.getClickedPos().relative(context.getClickedFace()),context.getHand(),context.getItemInHand());
-        return result ? InteractionResult.sidedSuccess(context.getLevel().isClientSide()) : InteractionResult.FAIL;
+        return tryPlaceDough(context.getPlayer(),context.getLevel(),context.getClickedPos().relative(context.getClickedFace()),context.getHand(),context.getItemInHand());
     }
-    private boolean tryPlaceDough(Player player, Level level, BlockPos pos, InteractionHand hand, ItemStack stack){
+    private InteractionResult tryPlaceDough(Player player, Level level, BlockPos pos, InteractionHand hand, ItemStack stack){
         //used in 'useOn'
-        if (level.isClientSide()) return true;
-
-        boolean result = false;
-        if (DoughUtils.hasDoughTag(stack) && player.isShiftKeyDown()){
+        if (!level.isClientSide() && DoughUtils.hasDoughTag(stack) && player.isShiftKeyDown()){
             DoughBlockEntity dough = DoughUtils.placeDough(pos,stack.getTag(),
                     BananaBlockEntities.DOUGH_BLOCK_ENTITY.get(),
                     BananaBlocks.DOUGH_BLOCK.get().defaultBlockState(),
                     (BlockState doughState) -> DoughUtils.swapItemAndBlock(player,level,pos,hand,new ItemStack(Items.BOWL), doughState));
 
             level.setBlockEntity(dough);
-            result = true;
         }
-        return result;
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
     @SubscribeEvent
     public static void onBowlUse(PlayerInteractEvent.RightClickBlock event){
@@ -76,17 +71,14 @@ public class DoughBowlItem extends Item {
 
     private static boolean tryPickupDough(Player player, Level level, BlockPos pos, InteractionHand hand, ItemStack stack){
         //used in 'onBowlUse"
-        if (level.isClientSide()) return false;
-
+        boolean result = false;
         Optional<DoughBlockEntity> dough;
-        if(stack.is(Items.BOWL) && (dough = level.getBlockEntity(pos, BananaBlockEntities.DOUGH_BLOCK_ENTITY.get())).isPresent()){
-            ItemStack doughBowl = new ItemStack(BananaItems.DOUGH_BOWL.get());
-            doughBowl.setTag(dough.get().saveIngredientsContent(new CompoundTag()));
-
-            DoughUtils.swapItemAndBlock(player,level,pos,hand,doughBowl,Blocks.AIR.defaultBlockState());
-            return true;
+        if(!level.isClientSide() && stack.is(Items.BOWL) && (dough = level.getBlockEntity(pos, BananaBlockEntities.DOUGH_BLOCK_ENTITY.get())).isPresent()){
+            DoughUtils.pickupDough(dough.get(),
+                    (ItemStack doughBowl) -> DoughUtils.swapItemAndBlock(player,level,pos,hand,doughBowl,Blocks.AIR.defaultBlockState()));
+            result = true;
         }
-        return false;
+        return result;
     }
 
 }

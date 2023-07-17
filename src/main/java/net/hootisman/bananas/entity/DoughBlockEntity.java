@@ -19,8 +19,7 @@ public class DoughBlockEntity extends BlockEntity {
     private short yeastContent = 0;
     private byte saltContent = 0;
     public DoughBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(blockState.is(BananaBlocks.DOUGH_BLOCK.get()) ? BananaBlockEntities.DOUGH_BLOCK_ENTITY.get() :
-                        BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get(), blockPos, blockState);
+        super(DoughUtils.getDoughEntityType(blockState),blockPos,blockState);
     }
     public void loadIngredientsContent(CompoundTag tag){
         lastTickTime = tag.getLong("time");

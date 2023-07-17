@@ -59,7 +59,14 @@ public class CauldronUtils {
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     };
-
+    public static final CauldronInteraction EMPTY_DOUGH = (blockState, level, blockPos, player, hand, stack) -> {
+        Optional<DoughBlockEntity> dough;
+        if (!level.isClientSide() && (dough = level.getBlockEntity(blockPos,BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get())).isPresent()){
+            DoughUtils.pickupDough(dough.get(),
+                    (ItemStack doughBowl) -> DoughUtils.swapItemAndBlock(player,level,blockPos,hand,doughBowl,Blocks.CAULDRON.defaultBlockState()));
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide());
+    };
 
 
     private static boolean canFlourBePlaced(BlockState state){
