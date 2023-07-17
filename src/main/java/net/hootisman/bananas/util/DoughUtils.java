@@ -63,13 +63,14 @@ public class DoughUtils {
         return currentTickTime - lastTickTime >= YEAST_TICK;
     }
     public static boolean hasDoughTag(ItemStack stack){
-        CompoundTag tag;
-        return stack.hasTag()
-                && (tag = stack.getTag()).contains("time")
-                && tag.contains("flour")
-                && tag.contains("water")
-                && tag.contains("yeast")
-                && tag.contains("salt");
+        return stack.hasTag() && isDoughTag(stack.getTag());
+    }
+    public static boolean isDoughTag(CompoundTag tag){
+        return tag.contains("time") &&
+                tag.contains("flour") &&
+                tag.contains("water") &&
+                tag.contains("yeast") &&
+                tag.contains("salt");
     }
 
 }
