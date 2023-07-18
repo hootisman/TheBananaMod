@@ -5,7 +5,12 @@ import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -16,6 +21,7 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -23,6 +29,8 @@ import java.util.function.Supplier;
 
 public class DoughUtils {
     public static final int YEAST_TICK = 200;      //after x amount of ticks, ferment yeast once
+    public static final int MAX_DOUGH_SIZE = 4000;  //max size in grams of dough block
+    public static final int MAX_BREAD_SIZE = 1000;  //max size in grams of one bread
 
     public static DoughBlockEntity placeDough(@Nullable CompoundTag tag, Supplier<DoughBlockEntity> createDoughEntity, Consumer<BlockState> swapItemBlockFunc){
         //places DoughBlockEntity
@@ -45,6 +53,9 @@ public class DoughUtils {
     }
     public static void playSoundHelper(Level level, BlockPos blockPos, SoundEvent soundEvent){
         level.playSound(null,blockPos, soundEvent, SoundSource.BLOCKS);
+    }
+    public static <T extends ParticleOptions> void spawnParticlesHelper(T type, ServerLevel level, Vec3 pos, int count, Vec3 delta, float speed){
+        level.sendParticles(type,pos.x(),pos.y(),pos.z(),count, delta.x(),delta.y(),delta.z(),speed);
     }
     public static CompoundTag saveSpecificContent(long time, int flour, int water, int yeast, int salt){
         CompoundTag tag = new CompoundTag();

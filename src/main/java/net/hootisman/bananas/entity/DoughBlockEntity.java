@@ -4,6 +4,8 @@ import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.util.DoughUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -12,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class DoughBlockEntity extends BlockEntity {
     private long lastTickTime = 0;
@@ -72,8 +75,12 @@ public class DoughBlockEntity extends BlockEntity {
         if (DoughUtils.canYeastGrow(entity.yeastContent)){
             entity.yeastContent++;
             entity.setChanged();
-            ((ServerLevel)level).sendParticles(ParticleTypes.BUBBLE,blockPos.getX() + level.random.nextDouble(),blockPos.getY() + 1.05f,blockPos.getZ() + level.random.nextDouble(),1, 0.0f,0.01f,0.0f,0.0f);
             DoughUtils.playSoundHelper(level, blockPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP);
+            DoughUtils.spawnParticlesHelper(ParticleTypes.BUBBLE,(ServerLevel) level,
+                    new Vec3(blockPos.getX() + level.random.nextDouble(),blockPos.getY() + 1.05f,blockPos.getZ() + level.random.nextDouble()),
+                    1,
+                    new Vec3(0.0f,0.01f,0.0f),
+                    0.0f);
         }
     }
 }

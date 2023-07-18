@@ -1,4 +1,9 @@
 package net.hootisman.bananas.item;
 
-public class RawBreadItem {
+import net.minecraft.world.item.Item;
+
+public class RawBreadItem extends Item {
+    public RawBreadItem() {
+        super(new Properties().stacksTo(1));
+    }
 }

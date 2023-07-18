@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 @Mod.EventBusSubscriber(modid = BananaCore.MODID)
 public class BananaForgeEvents {
     public static Logger LOGGER = LogUtils.getLogger();
-    @SubscribeEvent
+//    @SubscribeEvent
     public static void onItemRightClick(PlayerInteractEvent.RightClickItem event){
         //for debugging
         if (event.getSide() == LogicalSide.SERVER && event.getItemStack().isEdible() ){

@@ -21,6 +21,7 @@ public class BanItemModelProvider extends ItemModelProvider {
         simpleItem(BananaItems.BANANA_BOOTS);
         simpleItem(BananaItems.FLOUR);
         simpleItem(BananaItems.DOUGH_BOWL);
+        simpleItem(BananaItems.RAW_BREAD);
         handheldItem(BananaItems.BANANA_PICKAXE);
         handheldItem(BananaItems.BURNT_BANANA_PICKAXE);
 
