@@ -1,5 +1,6 @@
 package net.hootisman.bananas.util;
 
+import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.entity.DoughBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -23,7 +24,7 @@ public class DoughData {
     // TODO javadoc
     private int pointsToAllocate;   //points to divide between nutrition and saturation
     // TODO javadoc
-    private int totalFlour;
+    private short totalFlour;
     // TODO javadoc
     private int nutrition;
     // TODO javadoc
@@ -42,7 +43,7 @@ public class DoughData {
 
         breadIngredients = new HashMap<>();
         for (String attribute : keys){
-            breadIngredients.put(attribute, new BreadIngredient(0,1));
+            breadIngredients.put(attribute, new BreadIngredient((short) 0,(short)1));
         }
     }
 
@@ -56,14 +57,14 @@ public class DoughData {
         }
     }
     // TODO javadoc
-    public void setIngredient(String key, int value){
+    public void setIngredient(String key, short value){
         breadIngredients.get(key).set(value, totalFlour);
     }
     // TODO javadoc
-    public int getUsingPercent(String key){
-        return (int) (totalFlour * getBakersPercent(key));
+    public short getUsingPercent(String key){
+        return (short) (totalFlour * getBakersPercent(key));
     }
-    public int get(String key){
+    public short get(String key){
         return key.equals("flour") ? totalFlour : breadIngredients.get(key).getAmount();
     }
     public float getSize(){
@@ -87,11 +88,11 @@ public class DoughData {
     public float getMaxBound(String key){
         return maxBounds.get(key);
     }
-    private int getTagData(String key){
-        return ((NumericTag)doughTag.get(key)).getAsInt();
+    private short getTagData(String key){
+        return ((NumericTag)doughTag.get(key)).getAsShort();
     }
     // TODO javadoc
-    private void updateFlour(Function<String, Integer> func){
+    private void updateFlour(Function<String, Short> func){
         for (String key : keys){
             setIngredient(key, func.apply(key));
         }
@@ -101,15 +102,17 @@ public class DoughData {
         float doughSize = getSize();
         if (DoughUtils.MAX_BREAD_SIZE <= doughSize){
             float ratioForTaking = DoughUtils.MAX_BREAD_SIZE / doughSize;      //ratio for how much flour to take such that bread = 1000g and bakers percentage remains the same
-            int takenFlour = (int) (ratioForTaking * totalFlour);
+            float takenFlourF = ratioForTaking * totalFlour;
+            short takenFlour = (short) (Math.round(takenFlourF));
             /* update internal values */
             totalFlour -= takenFlour;       //take flour >:)
-            updateFlour((key) -> (int) (getBakersPercent(key) * totalFlour));
+            updateFlour((key) -> (short) (Math.round(getBakersPercent(key) * totalFlour)));
+            LogUtils.getLogger().info("DEBUG size: " + doughSize + " ratioForTaking: " + ratioForTaking + " takenFlour " + takenFlour + " totalflour AFTER TAKING " + totalFlour);
             /* return new bread tag */
             return DoughUtils.saveSpecificContent(0L,takenFlour,
-                    (int) (takenFlour * getBakersPercent("water")),
-                    (int) (takenFlour * getBakersPercent("yeast")),
-                    (int) (takenFlour * getBakersPercent("salt")));
+                    (int) (takenFlourF * getBakersPercent("water")),
+                    (int) (takenFlourF * getBakersPercent("yeast")),
+                    (int) (takenFlourF * getBakersPercent("salt")));
         }
         return null;
     }
@@ -123,31 +126,30 @@ public class DoughData {
 
     // TODO javadoc
     public boolean doYeastFerment(DoughBlockEntity entity){
-        if (DoughUtils.canYeastGrow((short) get("yeast"))){
-            setIngredient("yeast",get("yeast") + 1);
+        if (DoughUtils.canYeastGrow(get("yeast"))){
+            setIngredient("yeast", (short) (get("yeast") + 1));
             entity.setChanged();
             return true;
         }
         return false;
     }
-
     // TODO javadoc
     public static class BreadIngredient {
-        private int amount;
-        private int flourAmount;
+        private short amount;
+        private short flourAmount;
         private float bakersPercent;
-        private BreadIngredient(int amount, int flourAmount){
+        private BreadIngredient(short amount, short flourAmount){
             set(amount, flourAmount);
         }
-        public static float bakersPercent(int amount, int flourAmount){
+        public static float bakersPercent(short amount, short flourAmount){
             return (float) amount /flourAmount;
         }
-        public void set(int amount, int flourAmount){
+        public void set(short amount, short flourAmount){
             this.amount = amount;
             this.flourAmount = flourAmount;
             this.bakersPercent = BreadIngredient.bakersPercent(amount, flourAmount);
         }
-        public int getAmount(){
+        public short getAmount(){
             return amount;
         }
         public float getBakersPercent(){

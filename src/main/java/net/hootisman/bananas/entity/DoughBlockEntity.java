@@ -28,14 +28,14 @@ public class DoughBlockEntity extends BlockEntity {
 
     public void loadDoughContent(CompoundTag tag){
         lastTickTime = tag.getLong("time");
-        data.loadIngredients(tag);
+        data.loadIngredients(tag);  //TODO might cause some performance issues?
     }
     public CompoundTag saveDoughContent(CompoundTag tag){
         tag.putLong("time",lastTickTime);
-        tag.putShort("flour", (short) data.get("flour"));
-        tag.putShort("water", (short) data.get("water"));
-        tag.putShort("yeast", (short) data.get("yeast"));
-        tag.putByte("salt", (byte) data.get("salt"));
+        tag.putShort("flour", data.get("flour"));
+        tag.putShort("water", data.get("water"));
+        tag.putShort("yeast", data.get("yeast"));
+        tag.putShort("salt", data.get("salt"));
 
         return tag;
     }

@@ -92,7 +92,7 @@ public class DoughUtils {
         tag.putShort("flour", (short) flour);
         tag.putShort("water", (short) water);
         tag.putShort("yeast", (short) yeast);
-        tag.putByte("salt", (byte) salt);
+        tag.putShort("salt", (short) salt);
 
         return tag;
     }
