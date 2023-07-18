@@ -16,12 +16,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class DoughBlockEntity extends BlockEntity {
-    private DoughData data;
+    private final DoughData data = new DoughData();
     private long lastTickTime = 0;
     public DoughBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(getDoughEntityType(blockState),blockPos,blockState);
-        data = new DoughData();
     }
+
+    public DoughData getDoughData() {
+        return data;
+    }
+
     public void loadDoughContent(CompoundTag tag){
         lastTickTime = tag.getLong("time");
         data.loadIngredients(tag);

@@ -12,6 +12,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class DoughData {
     private final String[] keys = {"water","yeast","salt"};
@@ -41,7 +42,7 @@ public class DoughData {
 
         breadIngredients = new HashMap<>();
         for (String attribute : keys){
-            breadIngredients.put(attribute, BreadIngredient.of(0, 1));
+            breadIngredients.put(attribute, new BreadIngredient(0,1));
         }
     }
 
@@ -50,10 +51,11 @@ public class DoughData {
         if (DoughUtils.isDoughTag(tag)){
             doughTag = tag;
             totalFlour = getTagData("flour");
-            updateFlour();
+            updateFlour(this::getTagData);
             calculateBreadData();
         }
     }
+    // TODO javadoc
     public void setIngredient(String key, int value){
         breadIngredients.get(key).set(value, totalFlour);
     }
@@ -89,9 +91,9 @@ public class DoughData {
         return ((NumericTag)doughTag.get(key)).getAsInt();
     }
     // TODO javadoc
-    private void updateFlour(){
+    private void updateFlour(Function<String, Integer> func){
         for (String key : keys){
-            setIngredient(key, getTagData(key));
+            setIngredient(key, func.apply(key));
         }
     }
     // TODO javadoc
@@ -100,7 +102,10 @@ public class DoughData {
         if (DoughUtils.MAX_BREAD_SIZE <= doughSize){
             float ratioForTaking = DoughUtils.MAX_BREAD_SIZE / doughSize;      //ratio for how much flour to take such that bread = 1000g and bakers percentage remains the same
             int takenFlour = (int) (ratioForTaking * totalFlour);
+            /* update internal values */
             totalFlour -= takenFlour;       //take flour >:)
+            updateFlour((key) -> (int) (getBakersPercent(key) * totalFlour));
+            /* return new bread tag */
             return DoughUtils.saveSpecificContent(0L,takenFlour,
                     (int) (takenFlour * getBakersPercent("water")),
                     (int) (takenFlour * getBakersPercent("yeast")),
@@ -133,9 +138,6 @@ public class DoughData {
         private float bakersPercent;
         private BreadIngredient(int amount, int flourAmount){
             set(amount, flourAmount);
-        }
-        public static BreadIngredient of(int amount, int flourAmount){
-            return new BreadIngredient(amount, flourAmount);
         }
         public static float bakersPercent(int amount, int flourAmount){
             return (float) amount /flourAmount;
