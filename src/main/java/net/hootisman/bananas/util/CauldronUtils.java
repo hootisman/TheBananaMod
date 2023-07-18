@@ -99,7 +99,8 @@ public class CauldronUtils {
 
         Optional<DoughBlockEntity> dough = level.getBlockEntity(blockPos,BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get());
         if (!level.isClientSide() && stack.getItem() instanceof AxeItem && dough.isPresent()){
-            DoughData data = new DoughData(dough.get().saveIngredientsContent(new CompoundTag()));
+//            DoughData data = new DoughData(dough.get().saveIngredientsContent(new CompoundTag()));
+            DoughData data = new DoughData();
             CompoundTag tag = data.takeSomeDough();
             if (tag == null) return InteractionResult.FAIL;
             LogUtils.getLogger().info("TAGG WORKS flour:" + tag.getShort("flour") +

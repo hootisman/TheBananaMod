@@ -1,38 +1,61 @@
 package net.hootisman.bananas.util;
 
-import com.mojang.logging.LogUtils;
+import net.hootisman.bananas.entity.DoughBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NumericTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class DoughData {
-    private final String[] attributes = {"water","yeast","salt"};
+    private final String[] keys = {"water","yeast","salt"};
+    private final Map<String, BreadIngredient> breadIngredients;
+    private final Map<String, Float> maxBounds;
     private int pointsToAllocate;   //points to divide between nutrition and saturation
     private int totalFlour;
     private int nutrition;
     private float saturation;
     private float saturationMod;
     private CompoundTag doughTag;
-    private Map<String, BakersPercent> bakersPercentages;
-    private Map<String, Float> maxBounds;
 
-    public DoughData(CompoundTag tag) {
+    public DoughData() {
+        pointsToAllocate = 11;
+        maxBounds = new HashMap<>();
+        maxBounds.put("water",0.65f);
+        maxBounds.put("yeast",0.25f);
+        maxBounds.put("salt",0.06f);
+
+        breadIngredients = new HashMap<>();
+        for (String attribute : keys){
+            breadIngredients.put(attribute, BreadIngredient.of(0, 1));
+        }
+    }
+//    public CompoundTag saveIngredients(CompoundTag tag){
+//
+//    }
+
+    public void loadIngredients(CompoundTag tag){
         if (DoughUtils.isDoughTag(tag)){
-            this.pointsToAllocate = 11;
-            this.doughTag = tag;
-            this.totalFlour = getTagData("flour");
-            initializeBakersPercent(this.totalFlour);
-            initializeMaxBounds();
+            doughTag = tag;
+            totalFlour = getTagData("flour");
+            updateFlour();
             calculateBreadData();
         }
     }
-    public int get(String key){
+    public void setIngredient(String key, int value){
+        breadIngredients.get(key).set(value, totalFlour);
+    }
+    public int getUsingPercent(String key){
         return (int) (totalFlour * getBakersPercent(key));
     }
-    public float getBakersSum(){
-       return (float) bakersPercentages.values().stream().mapToDouble(BakersPercent::get).sum() + 1.0f;
+    public int get(String key){
+        return key.equals("flour") ? totalFlour : breadIngredients.get(key).getAmount();
     }
     public float getSize(){
         return getBakersSum() * totalFlour;
@@ -46,8 +69,11 @@ public class DoughData {
     public float getSaturationMod() {
         return saturationMod;
     }
+    public float getBakersSum(){
+        return (float) breadIngredients.values().stream().mapToDouble(BreadIngredient::getBakersPercent).sum() + 1.0f;
+    }
     public float getBakersPercent(String key){
-        return key.equals("flour") ? 1.0f : bakersPercentages.get(key).get();
+        return key.equals("flour") ? 1.0f : breadIngredients.get(key).getBakersPercent();
     }
     public float getMaxBound(String key){
         return maxBounds.get(key);
@@ -55,16 +81,9 @@ public class DoughData {
     private int getTagData(String key){
         return ((NumericTag)doughTag.get(key)).getAsInt();
     }
-    private void initializeMaxBounds() {
-        maxBounds = new HashMap<>();
-        maxBounds.put("water",0.65f);
-        maxBounds.put("yeast",0.25f);
-        maxBounds.put("salt",0.06f);
-    }
-    private void initializeBakersPercent(int flourAmount){
-        bakersPercentages = new HashMap<>();
-        for (String attribute : attributes){
-            bakersPercentages.put(attribute,BakersPercent.of(getTagData(attribute), flourAmount));
+    private void updateFlour(){
+        for (String key : keys){
+            setIngredient(key, getTagData(key));
         }
     }
 
@@ -88,24 +107,42 @@ public class DoughData {
         saturationMod = saturation / (2.0f * nutrition);
     }
 
+    public void doYeastFerment(DoughBlockEntity entity, Level level, BlockPos blockPos){
+        if (DoughUtils.canYeastGrow((short) get("yeast"))){
+            setIngredient("yeast",get("yeast") + 1);
+            entity.setChanged();
+            DoughUtils.playSoundHelper(level, blockPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP);
+            DoughUtils.spawnParticlesHelper(ParticleTypes.BUBBLE,(ServerLevel) level,
+                    new Vec3(blockPos.getX() + level.random.nextDouble(),blockPos.getY() + 1.05f,blockPos.getZ() + level.random.nextDouble()),
+                    1,
+                    new Vec3(0.0f,0.01f,0.0f),
+                    0.0f);
+        }
+    }
 
-    public static class BakersPercent {
+    public static class BreadIngredient {
         private int amount;
         private int flourAmount;
-        private float percent;
-        private BakersPercent(int amount, int flourAmount){
-            this.amount = amount;
-            this.flourAmount = flourAmount;
-            this.percent = BakersPercent.set(amount, flourAmount);
+        private float bakersPercent;
+        private BreadIngredient(int amount, int flourAmount){
+            set(amount, flourAmount);
         }
-        public static float set(int amount, int flourAmount){
+        public static BreadIngredient of(int amount, int flourAmount){
+            return new BreadIngredient(amount, flourAmount);
+        }
+        public static float bakersPercent(int amount, int flourAmount){
             return (float) amount /flourAmount;
         }
-        public static BakersPercent of(int amount, int flourAmount){
-            return new BakersPercent(amount, flourAmount);
+        public void set(int amount, int flourAmount){
+            this.amount = amount;
+            this.flourAmount = flourAmount;
+            this.bakersPercent = BreadIngredient.bakersPercent(amount, flourAmount);
         }
-        public float get(){
-            return percent;
+        public int getAmount(){
+            return amount;
+        }
+        public float getBakersPercent(){
+            return bakersPercent;
         }
     }
 }
