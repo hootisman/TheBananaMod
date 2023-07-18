@@ -15,13 +15,21 @@ import java.util.Map;
 
 public class DoughData {
     private final String[] keys = {"water","yeast","salt"};
+    // TODO javadoc
     private final Map<String, BreadIngredient> breadIngredients;
+    // TODO javadoc
     private final Map<String, Float> maxBounds;
+    // TODO javadoc
     private int pointsToAllocate;   //points to divide between nutrition and saturation
+    // TODO javadoc
     private int totalFlour;
+    // TODO javadoc
     private int nutrition;
+    // TODO javadoc
     private float saturation;
+    // TODO javadoc
     private float saturationMod;
+    // TODO javadoc
     private CompoundTag doughTag;
 
     public DoughData() {
@@ -36,10 +44,8 @@ public class DoughData {
             breadIngredients.put(attribute, BreadIngredient.of(0, 1));
         }
     }
-//    public CompoundTag saveIngredients(CompoundTag tag){
-//
-//    }
 
+    // TODO javadoc
     public void loadIngredients(CompoundTag tag){
         if (DoughUtils.isDoughTag(tag)){
             doughTag = tag;
@@ -51,6 +57,7 @@ public class DoughData {
     public void setIngredient(String key, int value){
         breadIngredients.get(key).set(value, totalFlour);
     }
+    // TODO javadoc
     public int getUsingPercent(String key){
         return (int) (totalFlour * getBakersPercent(key));
     }
@@ -81,12 +88,13 @@ public class DoughData {
     private int getTagData(String key){
         return ((NumericTag)doughTag.get(key)).getAsInt();
     }
+    // TODO javadoc
     private void updateFlour(){
         for (String key : keys){
             setIngredient(key, getTagData(key));
         }
     }
-
+    // TODO javadoc
     public CompoundTag takeSomeDough(){
         float doughSize = getSize();
         if (DoughUtils.MAX_BREAD_SIZE <= doughSize){
@@ -100,6 +108,7 @@ public class DoughData {
         }
         return null;
     }
+    // TODO javadoc
     private void calculateBreadData(){
         float ratio = Math.min(getBakersPercent("water") / getMaxBound("water"), 1.0f); //float from 0 - 1
         saturation = (float)Math.round(pointsToAllocate * ratio * 10.0f)/10.0f;
@@ -107,6 +116,7 @@ public class DoughData {
         saturationMod = saturation / (2.0f * nutrition);
     }
 
+    // TODO javadoc
     public boolean doYeastFerment(DoughBlockEntity entity){
         if (DoughUtils.canYeastGrow((short) get("yeast"))){
             setIngredient("yeast",get("yeast") + 1);
@@ -116,6 +126,7 @@ public class DoughData {
         return false;
     }
 
+    // TODO javadoc
     public static class BreadIngredient {
         private int amount;
         private int flourAmount;
