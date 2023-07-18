@@ -1,6 +1,5 @@
 package net.hootisman.bananas.util;
 
-import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.block.FlourCauldronBlock;
 import net.hootisman.bananas.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaBlockEntities;
@@ -19,8 +18,8 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.Map;
 import java.util.Optional;
@@ -77,13 +76,23 @@ public class CauldronUtils {
 
     public static final CauldronInteraction MIX_FLOUR = (blockState, level, blockPos, player, hand, stack) -> {
         //right click flour in water cauldron
+        if (!level.isClientSide() && blockState.is(Blocks.WATER_CAULDRON)){
+            CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), 250, DoughUtils.GRAMS_IN_BOTTLE * blockState.getValue(LayeredCauldronBlock.LEVEL), 0, 0);
+            DoughBlockEntity dough = DoughUtils.placeDough(tag,
+                    () -> BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get().create(blockPos,BananaBlocks.DOUGH_CAULDRON.get().defaultBlockState()),
+                    (BlockState doughState) -> DoughUtils.swapItemAndBlock(player,level,blockPos,hand, ItemUtils.createFilledResult(stack,player,ItemStack.EMPTY),doughState));
+
+            level.setBlockEntity(dough);
+            DoughUtils.playSoundHelper(level,blockPos,SoundEvents.BREWING_STAND_BREW);
+            player.awardStat(Stats.FILL_CAULDRON);
+        }
         return InteractionResult.sidedSuccess(level.isClientSide());
     };
 
     public static final CauldronInteraction MIX_WATER = (blockState, level, blockPos, player, hand, stack) -> {
         //right click water in flour cauldron
         if (!level.isClientSide() && PotionUtils.getPotion(stack) == Potions.WATER){
-            CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), 250 * blockState.getValue(FlourCauldronBlock.LEVEL), 250, 0, 0);
+            CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), 250 * blockState.getValue(FlourCauldronBlock.LEVEL), DoughUtils.GRAMS_IN_BOTTLE, 0, 0);
             DoughBlockEntity dough = DoughUtils.placeDough(tag,
                     () -> BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get().create(blockPos,BananaBlocks.DOUGH_CAULDRON.get().defaultBlockState()),
                     (BlockState doughState) -> DoughUtils.swapItemAndBlock(player,level,blockPos,hand, ItemUtils.createFilledResult(stack,player,new ItemStack(Items.GLASS_BOTTLE)),doughState));
@@ -99,23 +108,18 @@ public class CauldronUtils {
 
         Optional<DoughBlockEntity> dough = level.getBlockEntity(blockPos,BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get());
         if (!level.isClientSide() && stack.getItem() instanceof AxeItem && dough.isPresent()){
-            DoughData data = dough.get().getDoughData();
-            CompoundTag tag = data.takeSomeDough();
-            if (tag == null) return InteractionResult.FAIL;
-            ItemStack bread = new ItemStack(BananaItems.RAW_BREAD.get());
-            bread.setTag(tag);
-            ItemEntity breadEntity = new ItemEntity(level,
+            ItemEntity breadEntity = DoughUtils.harvestDough(dough.get().getDoughData(),
+                    (bread) -> new ItemEntity(level,
                     blockPos.getX() + 0.5d,blockPos.getY() + 1d,blockPos.getZ() + 0.5d,
                     bread,
-                    level.getRandom().nextGaussian() * 0.07d,0.265d,level.getRandom().nextGaussian() * 0.07d);
-
-            DoughUtils.playSoundHelper(level,blockPos,SoundEvents.SHOVEL_FLATTEN);
-            DoughUtils.spawnParticlesHelper(ParticleTypes.WAX_OFF,(ServerLevel) level,
-                    new Vec3(blockPos.getX() + level.random.nextDouble(),blockPos.getY() + 1.05f,blockPos.getZ() + level.random.nextDouble()),
-                    5,
-                    new Vec3(0.0f,0.01f,0.0f),
-                    1.0f);
-            level.addFreshEntity(breadEntity);
+                    level.getRandom().nextGaussian() * 0.07d,0.265d,level.getRandom().nextGaussian() * 0.07d)
+            );
+            if (breadEntity != null){
+                level.addFreshEntity(breadEntity);
+                DoughUtils.playSoundHelper(level,blockPos,SoundEvents.SHOVEL_FLATTEN);
+                DoughUtils.spawnTopParticlesHelper(ParticleTypes.WAX_OFF,(ServerLevel) level,
+                        blockPos.getX(),blockPos.getY() + 1.05f,blockPos.getZ(),5, 0.0f,0.01f,0.0f, 1.0f);
+            }else return InteractionResult.FAIL;
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     };

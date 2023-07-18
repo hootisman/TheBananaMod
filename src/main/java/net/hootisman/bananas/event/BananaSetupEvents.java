@@ -17,11 +17,12 @@ public class BananaSetupEvents {
     @SubscribeEvent
     public static void onCommonSetup(FMLCommonSetupEvent event){
         //enqueue cauldron interactions
+        event.enqueueWork(() -> CauldronInteraction.WATER.put(BananaItems.FLOUR.get(), CauldronUtils.MIX_FLOUR));
+        event.enqueueWork(() -> CauldronInteraction.EMPTY.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_USING_FLOUR));
+        event.enqueueWork(() -> CauldronInteraction.EMPTY.put(BananaItems.DOUGH_BOWL.get(), CauldronUtils.FILL_USING_DOUGH));
         event.enqueueWork(() -> CauldronUtils.FLOUR_INTERACT.put(Items.AIR, CauldronUtils.EMPTY_FLOUR));
         event.enqueueWork(() -> CauldronUtils.FLOUR_INTERACT.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_USING_FLOUR));
         event.enqueueWork(() -> CauldronUtils.FLOUR_INTERACT.put(Items.POTION, CauldronUtils.MIX_WATER));
-        event.enqueueWork(() -> CauldronInteraction.EMPTY.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_USING_FLOUR));
-        event.enqueueWork(() -> CauldronInteraction.EMPTY.put(BananaItems.DOUGH_BOWL.get(), CauldronUtils.FILL_USING_DOUGH));
         event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(Items.BOWL, CauldronUtils.EMPTY_DOUGH));
         event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(Items.NETHERITE_AXE, CauldronUtils.HARVEST_DOUGH));
         event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(Items.DIAMOND_AXE, CauldronUtils.HARVEST_DOUGH));
@@ -29,6 +30,5 @@ public class BananaSetupEvents {
         event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(Items.IRON_AXE, CauldronUtils.HARVEST_DOUGH));
         event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(Items.STONE_AXE, CauldronUtils.HARVEST_DOUGH));
         event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(Items.WOODEN_AXE, CauldronUtils.HARVEST_DOUGH));
-
     }
 }

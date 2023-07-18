@@ -13,7 +13,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 
 public class DoughBlockEntity extends BlockEntity {
     private final DoughData data = new DoughData();
@@ -65,11 +64,8 @@ public class DoughBlockEntity extends BlockEntity {
 
             entity.lastTickTime = level.getGameTime();
             DoughUtils.playSoundHelper(level, blockPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP);
-            DoughUtils.spawnParticlesHelper(ParticleTypes.BUBBLE,(ServerLevel) level,
-                    new Vec3(blockPos.getX() + level.random.nextDouble(),blockPos.getY() + 1.05f,blockPos.getZ() + level.random.nextDouble()),
-                    1,
-                    new Vec3(0.0f,0.01f,0.0f),
-                    0.0f);
+            DoughUtils.spawnTopParticlesHelper(ParticleTypes.BUBBLE,(ServerLevel) level,
+                    blockPos.getX(),blockPos.getY() + 1.05f,blockPos.getZ(),1, 0.0f,0.01f,0.0f, 0.0f);
         }
 
     }

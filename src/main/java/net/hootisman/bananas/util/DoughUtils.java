@@ -9,15 +9,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class DoughUtils {
@@ -33,6 +34,11 @@ public class DoughUtils {
      * Size of one {@link net.hootisman.bananas.item.RawBreadItem} and {@link net.hootisman.bananas.item.BreadItem} (in grams)
      */
     public static final int MAX_BREAD_SIZE = 1000;
+    /**
+     * Size of one water bottle (in grams)
+     * One water bucket = 1000g
+     */
+    public static final int GRAMS_IN_BOTTLE = 333;
 
     /**
      * Tries to create and place a {@link DoughBlockEntity}
@@ -68,6 +74,22 @@ public class DoughUtils {
     }
 
     /**
+     * Tries to take some dough from {@link DoughData}, and create raw bread with it's data
+     * @param data DoughData to take from
+     * @param createItemEntity Function that creates an {@link ItemEntity} using an {@link ItemStack}
+     * @return {@link ItemEntity} of raw bread with taken dough data
+     */
+    public static ItemEntity harvestDough(DoughData data, Function<ItemStack, ItemEntity> createItemEntity){
+        CompoundTag tag = data.takeSomeDough();
+        if (tag != null){
+            ItemStack bread = new ItemStack(BananaItems.RAW_BREAD.get());
+            bread.setTag(tag);
+            return createItemEntity.apply(bread);
+        }
+        return null;
+    }
+
+    /**
      * Changes item in player's hand with newStack and changes block at position to newState
      * @param player who is performing action
      * @param level level to set block in
@@ -83,8 +105,23 @@ public class DoughUtils {
     public static void playSoundHelper(Level level, BlockPos blockPos, SoundEvent soundEvent){
         level.playSound(null,blockPos, soundEvent, SoundSource.BLOCKS);
     }
-    public static <T extends ParticleOptions> void spawnParticlesHelper(T type, ServerLevel level, Vec3 pos, int count, Vec3 delta, float speed){
-        level.sendParticles(type,pos.x(),pos.y(),pos.z(),count, delta.x(),delta.y(),delta.z(),speed);
+
+    /**
+     * Helper for spawning particles on top of block surface
+     * @param type
+     * @param level
+     * @param x
+     * @param y
+     * @param z
+     * @param count
+     * @param dx
+     * @param dy
+     * @param dz
+     * @param speed
+     * @param <T> ParticleTypes.?
+     */
+    public static <T extends ParticleOptions> void spawnTopParticlesHelper(T type, ServerLevel level, double x, double y, double z, int count, double dx, double dy, double dz, float speed){
+        level.sendParticles(type,x + level.random.nextDouble(),y,z + level.random.nextDouble(),count,dx,dy,dz,speed);
     }
     public static CompoundTag saveSpecificContent(long time, int flour, int water, int yeast, int salt){
         CompoundTag tag = new CompoundTag();

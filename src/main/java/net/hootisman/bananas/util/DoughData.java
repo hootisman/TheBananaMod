@@ -104,15 +104,15 @@ public class DoughData {
             float ratioForTaking = DoughUtils.MAX_BREAD_SIZE / doughSize;      //ratio for how much flour to take such that bread = 1000g and bakers percentage remains the same
             float takenFlourF = ratioForTaking * totalFlour;
             short takenFlour = (short) (Math.round(takenFlourF));
+            /* bread tag for raw_bread */
+            CompoundTag breadTag = DoughUtils.saveSpecificContent(0L,takenFlour,
+                    Math.round(takenFlourF * getBakersPercent("water")),
+                    Math.round(takenFlourF * getBakersPercent("yeast")),
+                    Math.round(takenFlourF * getBakersPercent("salt")));
             /* update internal values */
             totalFlour -= takenFlour;       //take flour >:)
             updateFlour((key) -> (short) (Math.round(getBakersPercent(key) * totalFlour)));
-            LogUtils.getLogger().info("DEBUG size: " + doughSize + " ratioForTaking: " + ratioForTaking + " takenFlour " + takenFlour + " totalflour AFTER TAKING " + totalFlour);
-            /* return new bread tag */
-            return DoughUtils.saveSpecificContent(0L,takenFlour,
-                    (int) (takenFlourF * getBakersPercent("water")),
-                    (int) (takenFlourF * getBakersPercent("yeast")),
-                    (int) (takenFlourF * getBakersPercent("salt")));
+            return breadTag;
         }
         return null;
     }
