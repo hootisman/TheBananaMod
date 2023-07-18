@@ -107,17 +107,13 @@ public class DoughData {
         saturationMod = saturation / (2.0f * nutrition);
     }
 
-    public void doYeastFerment(DoughBlockEntity entity, Level level, BlockPos blockPos){
+    public boolean doYeastFerment(DoughBlockEntity entity){
         if (DoughUtils.canYeastGrow((short) get("yeast"))){
             setIngredient("yeast",get("yeast") + 1);
             entity.setChanged();
-            DoughUtils.playSoundHelper(level, blockPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP);
-            DoughUtils.spawnParticlesHelper(ParticleTypes.BUBBLE,(ServerLevel) level,
-                    new Vec3(blockPos.getX() + level.random.nextDouble(),blockPos.getY() + 1.05f,blockPos.getZ() + level.random.nextDouble()),
-                    1,
-                    new Vec3(0.0f,0.01f,0.0f),
-                    0.0f);
+            return true;
         }
+        return false;
     }
 
     public static class BreadIngredient {

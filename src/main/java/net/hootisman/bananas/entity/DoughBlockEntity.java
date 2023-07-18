@@ -5,8 +5,6 @@ import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.util.DoughData;
 import net.hootisman.bananas.util.DoughUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -20,23 +18,15 @@ import net.minecraft.world.phys.Vec3;
 public class DoughBlockEntity extends BlockEntity {
     private DoughData data;
     private long lastTickTime = 0;
-    private short flourContent = 0;
-    private short waterContent = 0;
-    private short yeastContent = 0;
-    private byte saltContent = 0;
     public DoughBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(getDoughEntityType(blockState),blockPos,blockState);
         data = new DoughData();
     }
-    public void loadIngredientsContent(CompoundTag tag){
+    public void loadDoughContent(CompoundTag tag){
         lastTickTime = tag.getLong("time");
-//        flourContent = tag.getShort("flour");
-//        waterContent = tag.getShort("water");
-//        yeastContent = tag.getShort("yeast");
-//        saltContent = tag.getByte("salt");
         data.loadIngredients(tag);
     }
-    public CompoundTag saveIngredientsContent(CompoundTag tag){
+    public CompoundTag saveDoughContent(CompoundTag tag){
         tag.putLong("time",lastTickTime);
         tag.putShort("flour", (short) data.get("flour"));
         tag.putShort("water", (short) data.get("water"));
@@ -47,13 +37,13 @@ public class DoughBlockEntity extends BlockEntity {
     }
     @Override
     protected void saveAdditional(CompoundTag nbt) {
-        super.saveAdditional(saveIngredientsContent(nbt));
+        super.saveAdditional(saveDoughContent(nbt));
     }
 
     @Override
     public void load(CompoundTag nbt) {
         super.load(nbt);
-        loadIngredientsContent(nbt);
+        loadDoughContent(nbt);
     }
 
     public static BlockEntityType<DoughBlockEntity> getDoughEntityType(BlockState doughState){
@@ -66,11 +56,16 @@ public class DoughBlockEntity extends BlockEntity {
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, DoughBlockEntity entity) {
         if (level.isClientSide()) return;
 
-        if (DoughUtils.hasYeastFermented(level.getGameTime(), entity.lastTickTime)) {
+        if (DoughUtils.hasYeastFermented(level.getGameTime(), entity.lastTickTime) && entity.data.doYeastFerment(entity)) {
 //            LogUtils.getLogger().info("test of randomness! new tick till ferment is: " + level.random.nextIntBetweenInclusive(0,DoughUtils.YEAST_TICK));
 
             entity.lastTickTime = level.getGameTime();
-            entity.data.doYeastFerment(entity, level, blockPos);
+            DoughUtils.playSoundHelper(level, blockPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP);
+            DoughUtils.spawnParticlesHelper(ParticleTypes.BUBBLE,(ServerLevel) level,
+                    new Vec3(blockPos.getX() + level.random.nextDouble(),blockPos.getY() + 1.05f,blockPos.getZ() + level.random.nextDouble()),
+                    1,
+                    new Vec3(0.0f,0.01f,0.0f),
+                    0.0f);
         }
 
     }
