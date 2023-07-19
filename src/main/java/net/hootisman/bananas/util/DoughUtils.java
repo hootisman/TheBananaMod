@@ -25,7 +25,7 @@ public class DoughUtils {
     /**
      * How many ticks it takes for the yeast amount in {@link DoughData} to increase by 1
      */
-    public static final int YEAST_TICK = 200;
+    public static final int YEAST_TICK = 400;
     /**
      * Maximum dough size in {@link DoughData} (in grams)
      */
@@ -34,6 +34,10 @@ public class DoughUtils {
      * Size of one {@link net.hootisman.bananas.item.RawBreadItem} and {@link net.hootisman.bananas.item.BreadItem} (in grams)
      */
     public static final int MAX_BREAD_SIZE = 1000;
+    /**
+     * Size of one {@link net.hootisman.bananas.item.FlourItem} (in grams)
+     */
+    public static final int FLOUR_PER_DUST = 250;
     /**
      * Size of one water bottle (in grams)
      * One water bucket = 1000g
@@ -72,7 +76,9 @@ public class DoughUtils {
         doughBowl.setTag(dough.saveDoughContent(new CompoundTag()));
         swapItemBlockFunc.accept(ItemUtils.createFilledResult(container,player,doughBowl));
     }
+    public static void updateDough(){
 
+    }
     /**
      * Tries to take some dough from {@link DoughData}, and create raw bread with it's data
      * @param data DoughData to take from

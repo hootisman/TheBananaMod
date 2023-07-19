@@ -2,13 +2,18 @@ package net.hootisman.bananas.event;
 
 import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.BananaCore;
+import net.hootisman.bananas.util.CauldronUtils;
 import net.hootisman.bananas.util.DoughData;
 import net.hootisman.bananas.util.DoughUtils;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 
 @Mod.EventBusSubscriber(modid = BananaCore.MODID)
@@ -31,5 +36,17 @@ public class BananaForgeEvents {
 //            DoughData data4 = new DoughData(DoughUtils.saveSpecificContent(0,100,100,0,0));
 //            LOGGER.info("DOUGH DATA! nutrition: " + data4.getNutrition() + " saturation: " + data4.getSaturation() + " satModifier: " + data4.getSaturationMod());
         }
+    }
+
+
+    @SubscribeEvent
+    public static void onServerStart(ServerStartingEvent event){
+        doughAxeHarvestInteractions();
+    }
+
+    private static void doughAxeHarvestInteractions(){
+        ForgeRegistries.ITEMS.tags().getTag(ItemTags.AXES).stream().forEach(
+                (Item axe) -> CauldronUtils.DOUGH_INTERACT.put(axe,CauldronUtils.HARVEST_DOUGH)
+        );
     }
 }

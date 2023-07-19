@@ -7,9 +7,11 @@ import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(modid = BananaCore.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -17,18 +19,22 @@ public class BananaSetupEvents {
     @SubscribeEvent
     public static void onCommonSetup(FMLCommonSetupEvent event){
         //enqueue cauldron interactions
-        event.enqueueWork(() -> CauldronInteraction.WATER.put(BananaItems.FLOUR.get(), CauldronUtils.MIX_FLOUR));
-        event.enqueueWork(() -> CauldronInteraction.EMPTY.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_USING_FLOUR));
-        event.enqueueWork(() -> CauldronInteraction.EMPTY.put(BananaItems.DOUGH_BOWL.get(), CauldronUtils.FILL_USING_DOUGH));
-        event.enqueueWork(() -> CauldronUtils.FLOUR_INTERACT.put(Items.AIR, CauldronUtils.EMPTY_FLOUR));
-        event.enqueueWork(() -> CauldronUtils.FLOUR_INTERACT.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_USING_FLOUR));
-        event.enqueueWork(() -> CauldronUtils.FLOUR_INTERACT.put(Items.POTION, CauldronUtils.MIX_WATER));
-        event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(Items.BOWL, CauldronUtils.EMPTY_DOUGH));
-        event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(Items.NETHERITE_AXE, CauldronUtils.HARVEST_DOUGH));
-        event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(Items.DIAMOND_AXE, CauldronUtils.HARVEST_DOUGH));
-        event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(Items.GOLDEN_AXE, CauldronUtils.HARVEST_DOUGH));
-        event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(Items.IRON_AXE, CauldronUtils.HARVEST_DOUGH));
-        event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(Items.STONE_AXE, CauldronUtils.HARVEST_DOUGH));
-        event.enqueueWork(() -> CauldronUtils.DOUGH_INTERACT.put(Items.WOODEN_AXE, CauldronUtils.HARVEST_DOUGH));
+        event.enqueueWork(BananaSetupEvents::doughFillInteractions);
+        event.enqueueWork(BananaSetupEvents::doughEmptyInteractions);
+        event.enqueueWork(BananaSetupEvents::doughMixInteractions);
+    }
+    private static void doughFillInteractions(){
+        CauldronInteraction.EMPTY.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_USING_FLOUR);
+        CauldronInteraction.EMPTY.put(BananaItems.DOUGH_BOWL.get(), CauldronUtils.FILL_USING_DOUGH);
+        CauldronUtils.FLOUR_INTERACT.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_USING_FLOUR);
+    }
+    private static void doughEmptyInteractions(){
+        CauldronUtils.DOUGH_INTERACT.put(Items.BOWL, CauldronUtils.EMPTY_DOUGH);
+        CauldronUtils.FLOUR_INTERACT.put(Items.AIR, CauldronUtils.EMPTY_FLOUR);
+    }
+    private static void doughMixInteractions(){
+        CauldronUtils.DOUGH_INTERACT.put(BananaItems.FLOUR.get(), CauldronUtils.MIX_FLOUR);
+        CauldronInteraction.WATER.put(BananaItems.FLOUR.get(), CauldronUtils.MIX_FLOUR);
+        CauldronUtils.FLOUR_INTERACT.put(Items.POTION, CauldronUtils.MIX_WATER);
     }
 }

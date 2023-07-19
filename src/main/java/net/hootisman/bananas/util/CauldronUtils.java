@@ -73,11 +73,12 @@ public class CauldronUtils {
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     };
-
+    /**
+     * Flour is used on water cauldron or dough cauldron, will create or update {@link DoughBlockEntity} respectively
+     */
     public static final CauldronInteraction MIX_FLOUR = (blockState, level, blockPos, player, hand, stack) -> {
-        //right click flour in water cauldron
         if (!level.isClientSide() && blockState.is(Blocks.WATER_CAULDRON)){
-            CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), 250, DoughUtils.GRAMS_IN_BOTTLE * blockState.getValue(LayeredCauldronBlock.LEVEL), 0, 0);
+            CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), DoughUtils.FLOUR_PER_DUST, DoughUtils.GRAMS_IN_BOTTLE * blockState.getValue(LayeredCauldronBlock.LEVEL), 0, 0);
             DoughBlockEntity dough = DoughUtils.placeDough(tag,
                     () -> BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get().create(blockPos,BananaBlocks.DOUGH_CAULDRON.get().defaultBlockState()),
                     (BlockState doughState) -> DoughUtils.swapItemAndBlock(player,level,blockPos,hand, ItemUtils.createFilledResult(stack,player,ItemStack.EMPTY),doughState));
@@ -85,6 +86,12 @@ public class CauldronUtils {
             level.setBlockEntity(dough);
             DoughUtils.playSoundHelper(level,blockPos,SoundEvents.BREWING_STAND_BREW);
             player.awardStat(Stats.FILL_CAULDRON);
+        } else if (!level.isClientSide() && blockState.is(BananaBlocks.DOUGH_CAULDRON.get())) {
+            Optional<DoughBlockEntity> dough = level.getBlockEntity(blockPos,BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get());
+            if (dough.isPresent()){
+                stack.shrink(1);
+                dough.get().getDoughData().increaseFlour(DoughUtils.FLOUR_PER_DUST);
+            }
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     };
@@ -92,7 +99,7 @@ public class CauldronUtils {
     public static final CauldronInteraction MIX_WATER = (blockState, level, blockPos, player, hand, stack) -> {
         //right click water in flour cauldron
         if (!level.isClientSide() && PotionUtils.getPotion(stack) == Potions.WATER){
-            CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), 250 * blockState.getValue(FlourCauldronBlock.LEVEL), DoughUtils.GRAMS_IN_BOTTLE, 0, 0);
+            CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), DoughUtils.FLOUR_PER_DUST * blockState.getValue(FlourCauldronBlock.LEVEL), DoughUtils.GRAMS_IN_BOTTLE, 0, 0);
             DoughBlockEntity dough = DoughUtils.placeDough(tag,
                     () -> BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get().create(blockPos,BananaBlocks.DOUGH_CAULDRON.get().defaultBlockState()),
                     (BlockState doughState) -> DoughUtils.swapItemAndBlock(player,level,blockPos,hand, ItemUtils.createFilledResult(stack,player,new ItemStack(Items.GLASS_BOTTLE)),doughState));

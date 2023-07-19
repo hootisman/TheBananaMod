@@ -1,15 +1,8 @@
 package net.hootisman.bananas.util;
 
-import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.entity.DoughBlockEntity;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NumericTag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +18,8 @@ public class DoughData {
     private int pointsToAllocate;   //points to divide between nutrition and saturation
     // TODO javadoc
     private short totalFlour;
+    //TODO javadoc
+    private float doughSize;
     // TODO javadoc
     private int nutrition;
     // TODO javadoc
@@ -52,7 +47,7 @@ public class DoughData {
         if (DoughUtils.isDoughTag(tag)){
             doughTag = tag;
             totalFlour = getTagData("flour");
-            updateFlour(this::getTagData);
+            updateBreadIngredients(this::getTagData);
 //            calculateBreadData();
         }
     }
@@ -60,15 +55,8 @@ public class DoughData {
     public void setIngredient(String key, short value){
         breadIngredients.get(key).set(value, totalFlour);
     }
-    // TODO javadoc
-    public short getUsingPercent(String key){
-        return (short) (totalFlour * getBakersPercent(key));
-    }
     public short get(String key){
         return key.equals("flour") ? totalFlour : breadIngredients.get(key).getAmount();
-    }
-    public float getSize(){
-        return getBakersSum() * totalFlour;
     }
     public int getNutrition() {
         return nutrition;
@@ -79,9 +67,6 @@ public class DoughData {
     public float getSaturationMod() {
         return saturationMod;
     }
-    public float getBakersSum(){
-        return (float) breadIngredients.values().stream().mapToDouble(BreadIngredient::getBakersPercent).sum() + 1.0f;
-    }
     public float getBakersPercent(String key){
         return key.equals("flour") ? 1.0f : breadIngredients.get(key).getBakersPercent();
     }
@@ -91,15 +76,33 @@ public class DoughData {
     private short getTagData(String key){
         return ((NumericTag)doughTag.get(key)).getAsShort();
     }
+
+    /**
+     * Gets the sum of all bakers percents in {@link #breadIngredients} (plus 1.0f which is bakers percent of flour) and multiplies by total flour to get the size of the dough (in grams)
+     * @return float size of dough in grams
+     */
+    public float updateSize(){
+        return (float) ((breadIngredients.values().stream().mapToDouble(BreadIngredient::getBakersPercent).sum() + 1.0f) * totalFlour);
+    }
+    public void increaseFlour(int addFlour){
+        totalFlour += addFlour;
+    }
+    public void decreaseFlour(int subFlour){
+        increaseFlour(-subFlour);
+    }
+    public void harvestDough(int subFlour){
+        decreaseFlour(subFlour);
+        updateBreadIngredients((key) -> (short) (Math.round(getBakersPercent(key) * totalFlour)));
+    }
     // TODO javadoc
-    private void updateFlour(Function<String, Short> func){
+    private void updateBreadIngredients(Function<String, Short> func){
         for (String key : keys){
             setIngredient(key, func.apply(key));
         }
     }
     // TODO javadoc
     public CompoundTag takeSomeDough(){
-        float doughSize = getSize();
+        doughSize = updateSize();
         if (DoughUtils.MAX_BREAD_SIZE <= doughSize){
             float ratioForTaking = DoughUtils.MAX_BREAD_SIZE / doughSize;      //ratio for how much flour to take such that bread = 1000g and bakers percentage remains the same
             float takenFlourF = ratioForTaking * totalFlour;
@@ -110,8 +113,7 @@ public class DoughData {
                     Math.round(takenFlourF * getBakersPercent("yeast")),
                     Math.round(takenFlourF * getBakersPercent("salt")));
             /* update internal values */
-            totalFlour -= takenFlour;       //take flour >:)
-            updateFlour((key) -> (short) (Math.round(getBakersPercent(key) * totalFlour)));
+            harvestDough(takenFlour);       //take flour >:)
             return breadTag;
         }
         return null;
