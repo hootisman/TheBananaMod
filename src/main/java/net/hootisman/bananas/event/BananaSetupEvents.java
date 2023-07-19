@@ -29,12 +29,13 @@ public class BananaSetupEvents {
         CauldronUtils.FLOUR_INTERACT.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_USING_FLOUR);
     }
     private static void doughEmptyInteractions(){
-        CauldronUtils.DOUGH_INTERACT.put(Items.BOWL, CauldronUtils.EMPTY_DOUGH);
         CauldronUtils.FLOUR_INTERACT.put(Items.AIR, CauldronUtils.EMPTY_FLOUR);
+        CauldronUtils.DOUGH_INTERACT.put(Items.BOWL, CauldronUtils.EMPTY_DOUGH);
     }
     private static void doughMixInteractions(){
-        CauldronUtils.DOUGH_INTERACT.put(BananaItems.FLOUR.get(), CauldronUtils.MIX_FLOUR);
         CauldronInteraction.WATER.put(BananaItems.FLOUR.get(), CauldronUtils.MIX_FLOUR);
         CauldronUtils.FLOUR_INTERACT.put(Items.POTION, CauldronUtils.MIX_WATER);
+        CauldronUtils.DOUGH_INTERACT.put(BananaItems.FLOUR.get(), CauldronUtils.MIX_FLOUR);
+        CauldronUtils.DOUGH_INTERACT.put(Items.POTION, CauldronUtils.MIX_WATER);
     }
 }

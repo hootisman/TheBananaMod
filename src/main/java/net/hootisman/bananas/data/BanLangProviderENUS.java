@@ -17,10 +17,13 @@ public class BanLangProviderENUS extends LanguageProvider {
         //items
         add(BananaItems.BANANA.get(),"Banana");
         add(BananaItems.BANANA_BUNDLE.get(),"Banana Bundle");
-        add(BananaItems.BANANA_PICKAXE.get(),"Banana Pickaxe");
+        add(BananaItems.BANANA_PICKAXE.get(),"Banana on a Stick");
         add(BananaItems.BURNT_BANANA_PICKAXE.get(),"Burnt Banana Pickaxe");
         add(BananaItems.BANANA_BOOTS.get(), "Banana Boots");
         add(BananaItems.FLOUR.get(), "Flour");
+        add(BananaItems.DOUGH_BOWL.get(), "Bowl of Dough");
+        add(BananaItems.RAW_BREAD.get(), "Raw Bread");
+        add(BananaItems.BREAD.get(), "Bread");
 
         //blocks
         add(BananaBlocks.BANANA_BLOCK.get(),"Banana Block");

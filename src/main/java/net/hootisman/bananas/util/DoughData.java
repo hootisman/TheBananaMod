@@ -84,6 +84,10 @@ public class DoughData {
     public float updateSize(){
         return (float) ((breadIngredients.values().stream().mapToDouble(BreadIngredient::getBakersPercent).sum() + 1.0f) * totalFlour);
     }
+    public void increaseWater(int addWater){
+
+        setIngredient("water", (short) (get("water") + addWater));
+    }
     public void increaseFlour(int addFlour){
         totalFlour += addFlour;
     }

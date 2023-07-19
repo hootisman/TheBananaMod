@@ -57,6 +57,7 @@ public class DoughBowlItem extends Item {
                     (BlockState doughState) -> DoughUtils.swapItemAndBlock(player,level,blockPos,hand,new ItemStack(Items.BOWL), doughState));
 
             level.setBlockEntity(dough);
+            DoughUtils.playSoundHelper(level,blockPos,SoundEvents.SHOVEL_FLATTEN);
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
@@ -67,13 +68,14 @@ public class DoughBowlItem extends Item {
         event.setCanceled(result);
     }
 
-    private static boolean tryPickupDough(Player player, Level level, BlockPos pos, InteractionHand hand, ItemStack stack){
+    private static boolean tryPickupDough(Player player, Level level, BlockPos blockPos, InteractionHand hand, ItemStack stack){
         //used in 'onBowlUse"
         boolean result = false;
         Optional<DoughBlockEntity> dough;
-        if(!level.isClientSide() && stack.is(Items.BOWL) && (dough = level.getBlockEntity(pos, BananaBlockEntities.DOUGH_BLOCK_ENTITY.get())).isPresent()){
+        if(!level.isClientSide() && stack.is(Items.BOWL) && (dough = level.getBlockEntity(blockPos, BananaBlockEntities.DOUGH_BLOCK_ENTITY.get())).isPresent()){
             DoughUtils.pickupDough(stack,player,dough.get(),
-                    (ItemStack doughBowl) -> DoughUtils.swapItemAndBlock(player,level,pos,hand,doughBowl,Blocks.AIR.defaultBlockState()));
+                    (ItemStack doughBowl) -> DoughUtils.swapItemAndBlock(player,level,blockPos,hand,doughBowl,Blocks.AIR.defaultBlockState()));
+            DoughUtils.playSoundHelper(level,blockPos,SoundEvents.SHOVEL_FLATTEN);
             result = true;
         }
         return result;

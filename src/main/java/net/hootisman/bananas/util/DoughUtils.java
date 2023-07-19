@@ -76,9 +76,6 @@ public class DoughUtils {
         doughBowl.setTag(dough.saveDoughContent(new CompoundTag()));
         swapItemBlockFunc.accept(ItemUtils.createFilledResult(container,player,doughBowl));
     }
-    public static void updateDough(){
-
-    }
     /**
      * Tries to take some dough from {@link DoughData}, and create raw bread with it's data
      * @param data DoughData to take from

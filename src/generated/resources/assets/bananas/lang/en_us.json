@@ -1,10 +1,13 @@
 {
   "block.bananas.banana_block": "Banana Block",
+  "item.bananas.awesome_bread": "Bread",
   "item.bananas.banana": "Banana",
   "item.bananas.banana_boots": "Banana Boots",
   "item.bananas.banana_bundle": "Banana Bundle",
-  "item.bananas.banana_pickaxe": "Banana Pickaxe",
+  "item.bananas.banana_pickaxe": "Banana on a Stick",
   "item.bananas.burnt_banana_pickaxe": "Burnt Banana Pickaxe",
+  "item.bananas.dough_bowl": "Bowl of Dough",
   "item.bananas.flour": "Flour",
+  "item.bananas.raw_bread": "Raw Bread",
   "itemGroup.bananas.creativetab": "Bunch of Banana Stuff"
 }
