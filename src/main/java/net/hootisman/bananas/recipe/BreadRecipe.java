@@ -1,5 +1,6 @@
 package net.hootisman.bananas.recipe;
 
+import net.hootisman.bananas.registry.BananaRecipes;
 import net.hootisman.bananas.util.DoughData;
 import net.hootisman.bananas.util.DoughUtils;
 import net.minecraft.core.RegistryAccess;
@@ -37,6 +38,6 @@ public class BreadRecipe extends AbstractCookingRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return null;
+        return BananaRecipes.BREAD_BAKING_SERIALIZER.get();
     }
 }

@@ -8,6 +8,7 @@ import net.hootisman.bananas.registry.BananaRecipes;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -34,12 +35,19 @@ public class BanRecipeProvider extends RecipeProvider {
                 .save(recipes, new ResourceLocation(BananaCore.MODID,"banana_block"));
 
         /** Items **/
+        //Bread
         new SimpleCookingRecipeBuilder(RecipeCategory.FOOD, CookingBookCategory.FOOD,
                 BananaItems.BREAD.get(),Ingredient.of(BananaItems.RAW_BREAD.get()),
                 0.35f,200,BananaRecipes.BREAD_BAKING_SERIALIZER.get())
                 .unlockedBy("has_raw_bread",has(BananaItems.RAW_BREAD.get()))
                 .save(recipes);
+        //Banana Bundle
         bananaBundleRecipes(recipes);
+
+        //Flour
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, BananaItems.FLOUR.get(),1)
+                .requires(ItemTags.AXES)
+                .requires(Items.WHEAT).unlockedBy("has_wheat",has(Items.WHEAT)).save(recipes);
 
         //Banana Pickaxe
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, BananaItems.BANANA_PICKAXE.get(),1)

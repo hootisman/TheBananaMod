@@ -1,7 +1,8 @@
-// 1.20.1	2023-07-18T22:26:01.023970842	Recipes
+// 1.20.1	2023-07-18T22:59:49.586352987	Recipes
 8950329e1f4d131b8e0226d9f0feaf069df9c4fa data/bananas/advancements/recipes/building_blocks/banana_block.json
 2ed1c3bbf1eb5bc13db33ca463f6edfb24eda1d6 data/bananas/advancements/recipes/combat/banana_boots.json
 bf24e62e0b26db6047350e25b379ed738e049bce data/bananas/advancements/recipes/food/awesome_bread.json
+6ae4239ede3de51249c0d3623e764a769a15a5c8 data/bananas/advancements/recipes/food/flour.json
 43d8bb7c261368fb7b165a4645acbe4729d0e132 data/bananas/advancements/recipes/misc/banana_bundle/banana_bundle0.json
 cd668d923f07d5458ec83c198f703e5743f0443a data/bananas/advancements/recipes/misc/banana_bundle/banana_bundle1.json
 c62a799b92eb441cd0aff6c5242a0b02a004e061 data/bananas/advancements/recipes/misc/banana_bundle/banana_bundle2.json
@@ -15,3 +16,4 @@ b965f06917a2529831ef28072388164e3d70edab data/bananas/recipes/banana_bundle/bana
 3dc0c0e5cdc740ee818a8a204294b2307d4e12df data/bananas/recipes/banana_bundle/banana_bundle2.json
 718b52328443a4aa3a9a354d7cbe35e356c29cca data/bananas/recipes/banana_bundle/banana_bundle3.json
 ac777d3e75b5488a6c764cc06510c96bcab5e0c5 data/bananas/recipes/banana_pickaxe.json
+91f41e9266d97285dd40746a819dd91a1d7d30b9 data/bananas/recipes/flour.json

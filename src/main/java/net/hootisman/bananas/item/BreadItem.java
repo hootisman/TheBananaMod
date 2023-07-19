@@ -15,11 +15,9 @@ public class BreadItem extends Item {
 
     @Override
     public @Nullable FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
-        //TODO override here to set custom food values based on flour/water/yeast
         if (stack.hasTag() && stack.getTag().contains("nutrition") && stack.getTag().contains("saturationMod")){
             int nutri = stack.getTag().getInt("nutrition");
             float satmod = stack.getTag().getInt("saturationMod");
-            LogUtils.getLogger().info("EATING BREAD@!! nutri: " + nutri + " satmod: " + satmod);
             return new FoodProperties.Builder().nutrition(nutri).saturationMod(satmod).build();
         }
         return super.getFoodProperties(stack, entity);
