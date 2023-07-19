@@ -53,7 +53,7 @@ public class DoughData {
             doughTag = tag;
             totalFlour = getTagData("flour");
             updateFlour(this::getTagData);
-            calculateBreadData();
+//            calculateBreadData();
         }
     }
     // TODO javadoc
@@ -117,11 +117,16 @@ public class DoughData {
         return null;
     }
     // TODO javadoc
-    private void calculateBreadData(){
+    public CompoundTag calculateBreadData(){
         float ratio = Math.min(getBakersPercent("water") / getMaxBound("water"), 1.0f); //float from 0 - 1
         saturation = (float)Math.round(pointsToAllocate * ratio * 10.0f)/10.0f;
         nutrition = (int) Math.min(pointsToAllocate - saturation + 1,20.0f);
         saturationMod = saturation / (2.0f * nutrition);
+
+        CompoundTag eatTag = new CompoundTag();
+        eatTag.putInt("nutrition",nutrition);
+        eatTag.putFloat("saturationMod",saturationMod);
+        return eatTag;
     }
 
     // TODO javadoc

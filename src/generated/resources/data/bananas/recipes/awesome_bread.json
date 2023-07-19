@@ -1,0 +1,10 @@
+{
+  "type": "bananas:bread_baking_serializer",
+  "category": "food",
+  "cookingtime": 200,
+  "experience": 0.35,
+  "ingredient": {
+    "item": "bananas:raw_bread"
+  },
+  "result": "bananas:awesome_bread"
+}

@@ -1,15 +1,16 @@
 package net.hootisman.bananas.data;
 
+import com.google.common.collect.ImmutableList;
 import net.hootisman.bananas.BananaCore;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
+import net.hootisman.bananas.registry.BananaRecipes;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CookingBookCategory;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -33,6 +34,11 @@ public class BanRecipeProvider extends RecipeProvider {
                 .save(recipes, new ResourceLocation(BananaCore.MODID,"banana_block"));
 
         /** Items **/
+        new SimpleCookingRecipeBuilder(RecipeCategory.FOOD, CookingBookCategory.FOOD,
+                BananaItems.BREAD.get(),Ingredient.of(BananaItems.RAW_BREAD.get()),
+                0.35f,200,BananaRecipes.BREAD_BAKING_SERIALIZER.get())
+                .unlockedBy("has_raw_bread",has(BananaItems.RAW_BREAD.get()))
+                .save(recipes);
         bananaBundleRecipes(recipes);
 
         //Banana Pickaxe

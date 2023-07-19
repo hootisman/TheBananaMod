@@ -32,6 +32,7 @@ public class BananaCore
         BananaSounds.register(modEventBus);
         BananaCreativeModeTab.register(modEventBus);
         BananaBlockEntities.register(modEventBus);
+        BananaRecipes.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.addListener(DoughBowlItem::onBowlUse);
         MinecraftForge.EVENT_BUS.register(this);
