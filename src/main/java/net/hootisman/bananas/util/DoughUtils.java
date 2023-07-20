@@ -1,5 +1,6 @@
 package net.hootisman.bananas.util;
 
+import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.core.BlockPos;
@@ -173,4 +174,5 @@ public class DoughUtils {
     public static boolean hasDoughTag(ItemStack stack){
         return stack.hasTag() && isDoughTag(stack.getTag());
     }
+
 }

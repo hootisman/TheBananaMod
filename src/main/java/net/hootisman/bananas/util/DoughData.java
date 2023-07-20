@@ -1,8 +1,11 @@
 package net.hootisman.bananas.util;
 
+import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.entity.DoughBlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NumericTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +22,7 @@ public class DoughData {
     // TODO javadoc
     private short totalFlour;
     //TODO javadoc
-    private float doughSize;
+    private int doughSize;
     // TODO javadoc
     private int nutrition;
     // TODO javadoc
@@ -48,6 +51,7 @@ public class DoughData {
             doughTag = tag;
             totalFlour = getTagData("flour");
             updateBreadIngredients(this::getTagData);
+            doughSize = updateSize();
 //            calculateBreadData();
         }
     }
@@ -57,6 +61,9 @@ public class DoughData {
     }
     public short get(String key){
         return key.equals("flour") ? totalFlour : breadIngredients.get(key).getAmount();
+    }
+    public float getSize(){
+        return doughSize;
     }
     public int getNutrition() {
         return nutrition;
@@ -81,8 +88,8 @@ public class DoughData {
      * Gets the sum of all bakers percents in {@link #breadIngredients} (plus 1.0f which is bakers percent of flour) and multiplies by total flour to get the size of the dough (in grams)
      * @return float size of dough in grams
      */
-    public float updateSize(){
-        return (float) ((breadIngredients.values().stream().mapToDouble(BreadIngredient::getBakersPercent).sum() + 1.0f) * totalFlour);
+    public int updateSize(){
+        return (int) ((breadIngredients.values().stream().mapToDouble(BreadIngredient::getBakersPercent).sum() + 1.0f) * totalFlour);
     }
     public void increaseWater(int addWater){
 
@@ -104,11 +111,19 @@ public class DoughData {
             setIngredient(key, func.apply(key));
         }
     }
-    // TODO javadoc
+
+    /**
+     * Used to take one breads worth of ingredients from dough.
+     * <p>
+     *     <b>ratioForTaking</b> = max bread size / current dough size; ratio for how much flour to take
+     *     <b>takenFlourF</b> = ratioForTaking * totalFlour;
+     *     <b>takenFlour</b> = round(takenFlourF); int version of takenFlourF
+     * </p>
+     * @return tag containing dough data
+     */
     public CompoundTag takeSomeDough(){
-        doughSize = updateSize();
         if (DoughUtils.MAX_BREAD_SIZE <= doughSize){
-            float ratioForTaking = DoughUtils.MAX_BREAD_SIZE / doughSize;      //ratio for how much flour to take such that bread = 1000g and bakers percentage remains the same
+            float ratioForTaking = (float) DoughUtils.MAX_BREAD_SIZE / doughSize;      //ratio for how much flour to take such that bread = 1000g and bakers percentage remains the same
             float takenFlourF = ratioForTaking * totalFlour;
             short takenFlour = (short) (Math.round(takenFlourF));
             /* bread tag for raw_bread */
@@ -118,15 +133,29 @@ public class DoughData {
                     Math.round(takenFlourF * getBakersPercent("salt")));
             /* update internal values */
             harvestDough(takenFlour);       //take flour >:)
+            doughSize = updateSize();
             return breadTag;
         }
         return null;
     }
-    // TODO javadoc
+
+    /**
+     *  Uses food values to calculate nutrition and saturation of a bread, then adds to an eat tag. An eat tag is an item tag with int nutrition and float saturationMod for setting food properties of bread in
+     * {@link net.hootisman.bananas.item.BreadItem#getFoodProperties(ItemStack, LivingEntity)}.
+     * <p>
+     *     <b>ratio</b> = bakers percent of water / maxBound of water; a float value between 0 and 1 <br>
+     *     <b>saturation</b> = points of bread * ratio; rounded to tenth decimal place <br>
+     *     <b>nutrition</b> = points of bread - saturation; int value between 1 and 20 <br>
+     *     <b>saturationMod</b> = saturation / (2 * nutrition); used in vanilla food data calculation
+     * </p>
+     * @return tag with int nutrition and float saturationMod values
+     * @see net.hootisman.bananas.item.BreadItem#getFoodProperties(ItemStack, LivingEntity)
+     * @see net.minecraft.world.food.FoodData#eat(int, float)
+     */
     public CompoundTag calculateBreadData(){
         float ratio = Math.min(getBakersPercent("water") / getMaxBound("water"), 1.0f); //float from 0 - 1
         saturation = (float)Math.round(pointsToAllocate * ratio * 10.0f)/10.0f;
-        nutrition = (int) Math.min(pointsToAllocate - saturation + 1,20.0f);
+        nutrition = (int) Math.min(pointsToAllocate - saturation + 1,20);
         saturationMod = saturation / (2.0f * nutrition);
 
         CompoundTag eatTag = new CompoundTag();
