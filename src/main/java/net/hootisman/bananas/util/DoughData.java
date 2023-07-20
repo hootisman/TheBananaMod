@@ -122,6 +122,7 @@ public class DoughData {
      * @return tag containing dough data
      */
     public CompoundTag takeSomeDough(){
+        doughSize = updateSize();
         if (DoughUtils.MAX_BREAD_SIZE <= doughSize){
             float ratioForTaking = (float) DoughUtils.MAX_BREAD_SIZE / doughSize;      //ratio for how much flour to take such that bread = 1000g and bakers percentage remains the same
             float takenFlourF = ratioForTaking * totalFlour;
@@ -133,7 +134,6 @@ public class DoughData {
                     Math.round(takenFlourF * getBakersPercent("salt")));
             /* update internal values */
             harvestDough(takenFlour);       //take flour >:)
-            doughSize = updateSize();
             return breadTag;
         }
         return null;

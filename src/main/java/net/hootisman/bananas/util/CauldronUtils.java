@@ -112,6 +112,7 @@ public class CauldronUtils {
         }else if (PotionUtils.getPotion(stack) == Potions.WATER && doughCauldron.isPresent()){
             //right clicked on dough cauldron
             doughCauldron.get().getDoughData().increaseWater(DoughUtils.GRAMS_IN_BOTTLE);
+            player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
             DoughUtils.playSoundHelper(level,blockPos,SoundEvents.BOTTLE_EMPTY);
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
