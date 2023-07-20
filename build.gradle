@@ -5,7 +5,7 @@ plugins {
     id 'org.spongepowered.mixin' version '0.7.+'
 }
 
-version = '1.0'
+version = '1.20.1-1.1-BETA'
 group = 'net.hootisman' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'bananas'
 

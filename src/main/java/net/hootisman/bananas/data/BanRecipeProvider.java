@@ -46,7 +46,7 @@ public class BanRecipeProvider extends RecipeProvider {
 
         //Flour
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, BananaItems.FLOUR.get(),1)
-                .requires(ItemTags.AXES)
+                .requires(ItemTags.STONE_CRAFTING_MATERIALS)
                 .requires(Items.WHEAT).unlockedBy("has_wheat",has(Items.WHEAT)).save(recipes);
 
         //Banana Pickaxe
