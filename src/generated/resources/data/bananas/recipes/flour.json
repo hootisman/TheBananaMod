@@ -1,9 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "bananas:flour_serializer",
   "category": "misc",
   "ingredients": [
     {
-      "tag": "minecraft:stone_crafting_materials"
+      "tag": "minecraft:axes"
     },
     {
       "item": "minecraft:wheat"

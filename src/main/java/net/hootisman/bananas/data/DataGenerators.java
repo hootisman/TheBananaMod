@@ -2,6 +2,7 @@ package net.hootisman.bananas.data;
 
 import net.hootisman.bananas.BananaCore;
 import net.hootisman.bananas.data.loot_tables.BanLootTableProvider;
+import net.hootisman.bananas.data.recipes.BanRecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;

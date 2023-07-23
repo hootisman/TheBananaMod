@@ -1,4 +1,4 @@
-package net.hootisman.bananas.data;
+package net.hootisman.bananas.data.recipes;
 
 import com.google.common.collect.ImmutableList;
 import net.hootisman.bananas.BananaCore;
@@ -45,9 +45,11 @@ public class BanRecipeProvider extends RecipeProvider {
         bananaBundleRecipes(recipes);
 
         //Flour
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, BananaItems.FLOUR.get(),1)
-                .requires(ItemTags.STONE_CRAFTING_MATERIALS)
-                .requires(Items.WHEAT).unlockedBy("has_wheat",has(Items.WHEAT)).save(recipes);
+//        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, BananaItems.FLOUR.get(),1)
+//                .requires(ItemTags.STONE_CRAFTING_MATERIALS)
+//                .requires(Items.WHEAT).unlockedBy("has_wheat",has(Items.WHEAT)).save(recipes);
+//        new FlourRecipeBuilder(RecipeCategory.FOOD, BananaItems.FLOUR.get(), 1)
+//                .requires(ItemTags.AXES).requires(Items.WHEAT).unlockedBy("has_wheat",has(Items.WHEAT)).save(recipes);
 
         //Banana Pickaxe
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, BananaItems.BANANA_PICKAXE.get(),1)
