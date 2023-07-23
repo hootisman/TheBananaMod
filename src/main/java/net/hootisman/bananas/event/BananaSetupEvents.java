@@ -24,18 +24,18 @@ public class BananaSetupEvents {
         event.enqueueWork(BananaSetupEvents::doughMixInteractions);
     }
     private static void doughFillInteractions(){
-        CauldronInteraction.EMPTY.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_USING_FLOUR);
-        CauldronInteraction.EMPTY.put(BananaItems.DOUGH_BOWL.get(), CauldronUtils.FILL_USING_DOUGH);
-        CauldronUtils.FLOUR_INTERACT.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_USING_FLOUR);
+        CauldronInteraction.EMPTY.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_FLOUR_ON_EMPTY);
+        CauldronInteraction.EMPTY.put(BananaItems.DOUGH_BOWL.get(), CauldronUtils.FILL_DOUGH_ON_EMPTY);
+        CauldronUtils.FLOUR_INTERACT.put(BananaItems.FLOUR.get(), CauldronUtils.FILL_FLOUR_ON_FLOUR);
     }
     private static void doughEmptyInteractions(){
         CauldronUtils.FLOUR_INTERACT.put(Items.AIR, CauldronUtils.EMPTY_FLOUR);
         CauldronUtils.DOUGH_INTERACT.put(Items.BOWL, CauldronUtils.EMPTY_DOUGH);
     }
     private static void doughMixInteractions(){
-        CauldronInteraction.WATER.put(BananaItems.FLOUR.get(), CauldronUtils.MIX_FLOUR);
-        CauldronUtils.FLOUR_INTERACT.put(Items.POTION, CauldronUtils.MIX_WATER);
-        CauldronUtils.DOUGH_INTERACT.put(BananaItems.FLOUR.get(), CauldronUtils.MIX_FLOUR);
-        CauldronUtils.DOUGH_INTERACT.put(Items.POTION, CauldronUtils.MIX_WATER);
+        CauldronInteraction.WATER.put(BananaItems.FLOUR.get(), CauldronUtils.MIX_FLOUR_ON_WATER);
+        CauldronUtils.FLOUR_INTERACT.put(Items.POTION, CauldronUtils.MIX_WATER_ON_FLOUR);
+        CauldronUtils.DOUGH_INTERACT.put(BananaItems.FLOUR.get(), CauldronUtils.MIX_FLOUR_ON_DOUGH);
+        CauldronUtils.DOUGH_INTERACT.put(Items.POTION, CauldronUtils.MIX_WATER_ON_DOUGH);
     }
 }
