@@ -77,7 +77,7 @@ public class CauldronUtils {
      * empty -> flour cauldron = cauldron
      */
     public static final CauldronInteraction EMPTY_FLOUR = (blockState, level, blockPos, player, hand, stack) -> {
-        if (level.isClientSide()) return InteractionResult.SUCCESS;
+        if (level.isClientSide() || !player.isShiftKeyDown()) return InteractionResult.SUCCESS;
 
         ItemStack flour = new ItemStack(BananaItems.FLOUR.get());
         flour.setCount(blockState.getValue(FlourCauldronBlock.LEVEL));
@@ -165,6 +165,9 @@ public class CauldronUtils {
 
         return InteractionResult.CONSUME;
     };
+    /**
+     * axe -> dough cauldron = raw bread
+     */
     public static final CauldronInteraction HARVEST_DOUGH = (blockState, level, blockPos, player, hand, stack) -> {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
 
