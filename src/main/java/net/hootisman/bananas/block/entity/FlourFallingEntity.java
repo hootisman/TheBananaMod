@@ -1,4 +1,4 @@
-package net.hootisman.bananas.entity;
+package net.hootisman.bananas.block.entity;
 
 import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.block.FlourBlock;

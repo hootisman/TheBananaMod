@@ -1,7 +1,6 @@
 package net.hootisman.bananas.util;
 
-import com.mojang.logging.LogUtils;
-import net.hootisman.bananas.entity.DoughBlockEntity;
+import net.hootisman.bananas.block.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -43,7 +42,7 @@ public class DoughUtils {
      * Size of one water bottle (in grams)
      * One water bucket = 1000g
      */
-    public static final int GRAMS_IN_BOTTLE = 333;
+    public static final int WATER_PER_BOTTLE = 333;
 
     /**
      * Tries to create and place a {@link DoughBlockEntity}

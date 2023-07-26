@@ -1,6 +1,6 @@
 package net.hootisman.bananas.block;
 
-import net.hootisman.bananas.entity.DoughBlockEntity;
+import net.hootisman.bananas.block.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;

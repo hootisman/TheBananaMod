@@ -1,7 +1,7 @@
 package net.hootisman.bananas.registry;
 
 import net.hootisman.bananas.BananaCore;
-import net.hootisman.bananas.entity.DoughBlockEntity;
+import net.hootisman.bananas.block.entity.DoughBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;

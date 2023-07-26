@@ -1,7 +1,8 @@
 package net.hootisman.bananas.util;
 
+import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.block.FlourCauldronBlock;
-import net.hootisman.bananas.entity.DoughBlockEntity;
+import net.hootisman.bananas.block.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.registry.BananaItems;
@@ -24,7 +25,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public class CauldronUtils {
@@ -114,7 +114,7 @@ public class CauldronUtils {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         if (PotionUtils.getPotion(stack) == Potions.WATER ) {
-            CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), DoughUtils.FLOUR_PER_DUST * blockState.getValue(FlourCauldronBlock.LEVEL), DoughUtils.GRAMS_IN_BOTTLE, 0, 0);
+            CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), DoughUtils.FLOUR_PER_DUST * blockState.getValue(FlourCauldronBlock.LEVEL), DoughUtils.WATER_PER_BOTTLE, 0, 0);
             placeDoughHelper(level, blockPos, SoundEvents.BREWING_STAND_BREW, tag,
                     BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get(),
                     BananaBlocks.DOUGH_CAULDRON.get().defaultBlockState(),
@@ -129,7 +129,7 @@ public class CauldronUtils {
     public static final CauldronInteraction MIX_FLOUR_ON_WATER = (blockState, level, blockPos, player, hand, stack) -> {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
 
-        CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), DoughUtils.FLOUR_PER_DUST, DoughUtils.GRAMS_IN_BOTTLE * blockState.getValue(LayeredCauldronBlock.LEVEL), 0, 0);
+        CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), DoughUtils.FLOUR_PER_DUST, DoughUtils.WATER_PER_BOTTLE * blockState.getValue(LayeredCauldronBlock.LEVEL), 0, 0);
         placeDoughHelper(level,blockPos, SoundEvents.BREWING_STAND_BREW, tag,
                 BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get(),
                 BananaBlocks.DOUGH_CAULDRON.get().defaultBlockState(),
@@ -144,9 +144,21 @@ public class CauldronUtils {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         level.getBlockEntity(blockPos,BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get()).ifPresent((DoughBlockEntity doughCauldron) -> {
-            if (!player.getAbilities().instabuild) stack.shrink(1); //instabuild = creative
-            doughCauldron.getDoughData().increaseFlour(DoughUtils.FLOUR_PER_DUST);
-            DoughUtils.playSoundHelper(level,blockPos,SoundEvents.SAND_PLACE);
+            DoughData data = doughCauldron.getDoughData();
+            data.increaseFlour(DoughUtils.FLOUR_PER_DUST);
+            LogUtils.getLogger().info("FLOUR; SIZE AFTER INCREASE " + data.getSize());
+            if (data.getSize() <= DoughUtils.MAX_DOUGH_SIZE){
+                //dough size is less than max
+                if (!player.getAbilities().instabuild) stack.shrink(1);
+                DoughUtils.playSoundHelper(level,blockPos,SoundEvents.SAND_PLACE);
+            } else if (data.getSize() - DoughUtils.MAX_DOUGH_SIZE < DoughUtils.FLOUR_PER_DUST) {
+                //dough size is greater than max, difference in size and max is less than grams of flour
+                data.decreaseFlour(data.getSize() - DoughUtils.MAX_DOUGH_SIZE);
+
+                if (!player.getAbilities().instabuild) stack.shrink(1);
+                DoughUtils.playSoundHelper(level,blockPos,SoundEvents.SAND_PLACE);
+                DoughUtils.playSoundHelper(level,blockPos,SoundEvents.ITEM_FRAME_ADD_ITEM);
+            } else data.decreaseFlour(DoughUtils.FLOUR_PER_DUST);
         });
 
         return InteractionResult.CONSUME;
@@ -158,9 +170,22 @@ public class CauldronUtils {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         level.getBlockEntity(blockPos,BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get()).ifPresent((DoughBlockEntity doughCauldron) -> {
-            if (!player.getAbilities().instabuild) player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
-            doughCauldron.getDoughData().increaseWater(DoughUtils.GRAMS_IN_BOTTLE);
-            DoughUtils.playSoundHelper(level,blockPos,SoundEvents.BOTTLE_EMPTY);
+            DoughData data = doughCauldron.getDoughData();
+            data.increaseWater(DoughUtils.WATER_PER_BOTTLE); //try increase
+
+            LogUtils.getLogger().info("WATER; SIZE AFTER INCREASE " + data.getSize());
+            if (data.getSize() <= DoughUtils.MAX_DOUGH_SIZE){
+                //dough size is less than max
+                if (!player.getAbilities().instabuild) player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
+                DoughUtils.playSoundHelper(level,blockPos,SoundEvents.BOTTLE_EMPTY);
+            } else if (data.getSize() - DoughUtils.MAX_DOUGH_SIZE < DoughUtils.WATER_PER_BOTTLE) {
+                //dough size is greater than max, difference in size and max is less than grams of bottle
+                data.decreaseWater(data.getSize() - DoughUtils.MAX_DOUGH_SIZE); //round to max dough size
+
+                if (!player.getAbilities().instabuild) player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
+                DoughUtils.playSoundHelper(level,blockPos,SoundEvents.BOTTLE_EMPTY);
+                DoughUtils.playSoundHelper(level,blockPos,SoundEvents.ITEM_FRAME_ADD_ITEM);
+            } else data.decreaseWater(DoughUtils.WATER_PER_BOTTLE);
         });
 
         return InteractionResult.CONSUME;

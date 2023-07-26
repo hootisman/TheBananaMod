@@ -1,7 +1,6 @@
 package net.hootisman.bananas.util;
 
-import com.mojang.logging.LogUtils;
-import net.hootisman.bananas.entity.DoughBlockEntity;
+import net.hootisman.bananas.block.entity.DoughBlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NumericTag;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,9 +12,14 @@ import java.util.function.Function;
 
 public class DoughData {
     private final String[] keys = {"water","yeast","salt"};
-    // TODO javadoc
+    /**
+     * Map of all ingredients corresponding to {@link #keys}
+     */
     private final Map<String, BreadIngredient> breadIngredients;
-    // TODO javadoc
+    /**
+     * once a {@link BreadIngredient} bakers percentage >= its max bound, will give its max attribute;  corresponds to {@link #keys}; <br>
+     * Example: if {@link BreadIngredient#bakersPercent} of water >= {@link #maxBounds}.get("water"), then bread will have max saturation
+     */
     private final Map<String, Float> maxBounds;
     // TODO javadoc
     private int pointsToAllocate;   //points to divide between nutrition and saturation
@@ -50,8 +54,7 @@ public class DoughData {
         if (DoughUtils.isDoughTag(tag)){
             doughTag = tag;
             totalFlour = getTagData("flour");
-            updateBreadIngredients(this::getTagData);
-            doughSize = updateSize();
+            applyToIngredients(this::getTagData);
 //            calculateBreadData();
         }
     }
@@ -62,7 +65,7 @@ public class DoughData {
     public short get(String key){
         return key.equals("flour") ? totalFlour : breadIngredients.get(key).getAmount();
     }
-    public float getSize(){
+    public int getSize(){
         return doughSize;
     }
     public int getNutrition() {
@@ -83,35 +86,57 @@ public class DoughData {
     private short getTagData(String key){
         return ((NumericTag)doughTag.get(key)).getAsShort();
     }
-
     /**
      * Gets the sum of all bakers percents in {@link #breadIngredients} (plus 1.0f which is bakers percent of flour) and multiplies by total flour to get the size of the dough (in grams)
      * @return float size of dough in grams
      */
-    public int updateSize(){
+    private int sumOfIngredients(){
         return (int) ((breadIngredients.values().stream().mapToDouble(BreadIngredient::getBakersPercent).sum() + 1.0f) * totalFlour);
     }
-    public void increaseWater(int addWater){
+    public void updateDoughSize(){
+        doughSize = totalFlour;
+        for (String key : keys){
+            doughSize += get(key);
+        }
+    }
 
+    public void increaseWater(int addWater){
         setIngredient("water", (short) (get("water") + addWater));
+        updateDoughSize();
+    }
+
+    /**
+     * No check for get("water") - subWater > 0, be wary
+     * @param subWater
+     */
+    public void decreaseWater(int subWater){
+        increaseWater(-subWater);
     }
     public void increaseFlour(int addFlour){
         totalFlour += addFlour;
+        updateDoughSize();
     }
+    /**
+     * No check for {@link #totalFlour} - subFlour > 0, be wary
+     * @param subFlour
+     */
     public void decreaseFlour(int subFlour){
         increaseFlour(-subFlour);
     }
     public void harvestDough(int subFlour){
         decreaseFlour(subFlour);
-        updateBreadIngredients((key) -> (short) (Math.round(getBakersPercent(key) * totalFlour)));
+        applyToIngredients((key) -> (short) (Math.round(getBakersPercent(key) * totalFlour)));
     }
-    // TODO javadoc
-    private void updateBreadIngredients(Function<String, Short> func){
+
+    /**
+     * For every {@link BreadIngredient}, set value to func return value
+     * @param func function to apply ingredient key to
+     */
+    private void applyToIngredients(Function<String, Short> func){
         for (String key : keys){
             setIngredient(key, func.apply(key));
         }
     }
-
     /**
      * Used to take one breads worth of ingredients from dough.
      * <p>
@@ -122,7 +147,7 @@ public class DoughData {
      * @return tag containing dough data
      */
     public CompoundTag takeSomeDough(){
-        doughSize = updateSize();
+        updateDoughSize();
         if (DoughUtils.MAX_BREAD_SIZE <= doughSize){
             float ratioForTaking = (float) DoughUtils.MAX_BREAD_SIZE / doughSize;      //ratio for how much flour to take such that bread = 1000g and bakers percentage remains the same
             float takenFlourF = ratioForTaking * totalFlour;
@@ -174,6 +199,10 @@ public class DoughData {
         return false;
     }
     // TODO javadoc
+
+    /**
+     * ingredient in bread that has certain amount and bakers percentage (amount / {@link #totalFlour})
+     */
     public static class BreadIngredient {
         private short amount;
         private short flourAmount;

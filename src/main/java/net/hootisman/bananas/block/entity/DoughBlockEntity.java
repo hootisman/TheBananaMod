@@ -1,4 +1,4 @@
-package net.hootisman.bananas.entity;
+package net.hootisman.bananas.block.entity;
 
 import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.hootisman.bananas.registry.BananaBlocks;
