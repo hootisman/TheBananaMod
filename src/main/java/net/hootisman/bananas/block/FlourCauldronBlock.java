@@ -11,19 +11,19 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 public class FlourCauldronBlock extends AbstractCauldronBlock {
-    public static final IntegerProperty LEVEL = BlockStateProperties.LAYERS;
+    public static final IntegerProperty LAYERS = BlockStateProperties.LAYERS;
     public FlourCauldronBlock() {
         super(BlockBehaviour.Properties.copy(Blocks.CAULDRON), CauldronUtils.FLOUR_INTERACT);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LEVEL);
+        builder.add(LAYERS);
     }
 
     @Override
     public boolean isFull(BlockState state) {
-        return state.getValue(LEVEL) == 8;
+        return state.getValue(LAYERS) == 8;
     }
 
 }

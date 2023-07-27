@@ -1,10 +1,12 @@
 package net.hootisman.bananas.util;
 
+import net.hootisman.bananas.block.DoughCauldronBlock;
 import net.hootisman.bananas.block.entity.DoughBlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NumericTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,9 +22,16 @@ public class DoughData {
      * once a {@link BreadIngredient} bakers percentage >= its max bound, will give its max attribute;  corresponds to {@link #keys}; <br>
      * Example: if {@link BreadIngredient#bakersPercent} of water >= {@link #maxBounds}.get("water"), then bread will have max saturation
      */
-    private final Map<String, Float> maxBounds;
+    private static final Map<String, Float> maxBounds;
+    static {
+        maxBounds = new HashMap<>();
+        maxBounds.put("water",0.65f);
+        maxBounds.put("yeast",0.25f);
+        maxBounds.put("salt",0.06f);
+    }
     // TODO javadoc
     private int pointsToAllocate;   //points to divide between nutrition and saturation
+    private DoughBlockEntity blockEntity;
     // TODO javadoc
     private short totalFlour;
     //TODO javadoc
@@ -36,27 +45,26 @@ public class DoughData {
     // TODO javadoc
     private CompoundTag doughTag;
 
-    public DoughData() {
+    public DoughData(DoughBlockEntity entity) {
         pointsToAllocate = 11;
-        maxBounds = new HashMap<>();
-        maxBounds.put("water",0.65f);
-        maxBounds.put("yeast",0.25f);
-        maxBounds.put("salt",0.06f);
-
+        blockEntity = entity;
         breadIngredients = new HashMap<>();
         for (String attribute : keys){
             breadIngredients.put(attribute, new BreadIngredient((short) 0,(short)1));
         }
     }
-
     // TODO javadoc
     public void loadIngredients(CompoundTag tag){
         if (DoughUtils.isDoughTag(tag)){
             doughTag = tag;
             totalFlour = getTagData("flour");
             applyToIngredients(this::getTagData);
+            updateDoughSize();
 //            calculateBreadData();
         }
+    }
+    public int calculateBlockStateLayer(){
+        return doughSize / 1000;
     }
     // TODO javadoc
     public void setIngredient(String key, short value){
@@ -86,25 +94,17 @@ public class DoughData {
     private short getTagData(String key){
         return ((NumericTag)doughTag.get(key)).getAsShort();
     }
-    /**
-     * Gets the sum of all bakers percents in {@link #breadIngredients} (plus 1.0f which is bakers percent of flour) and multiplies by total flour to get the size of the dough (in grams)
-     * @return float size of dough in grams
-     */
-    private int sumOfIngredients(){
-        return (int) ((breadIngredients.values().stream().mapToDouble(BreadIngredient::getBakersPercent).sum() + 1.0f) * totalFlour);
-    }
     public void updateDoughSize(){
         doughSize = totalFlour;
         for (String key : keys){
             doughSize += get(key);
         }
     }
-
     public void increaseWater(int addWater){
         setIngredient("water", (short) (get("water") + addWater));
         updateDoughSize();
+        blockEntity.updateBlockState();
     }
-
     /**
      * No check for get("water") - subWater > 0, be wary
      * @param subWater
@@ -115,6 +115,7 @@ public class DoughData {
     public void increaseFlour(int addFlour){
         totalFlour += addFlour;
         updateDoughSize();
+        blockEntity.updateBlockState();
     }
     /**
      * No check for {@link #totalFlour} - subFlour > 0, be wary
@@ -193,6 +194,7 @@ public class DoughData {
     public boolean doYeastFerment(DoughBlockEntity entity){
         if (DoughUtils.canYeastGrow(get("yeast"))){
             setIngredient("yeast", (short) (get("yeast") + 1));
+            blockEntity.updateBlockState();
             entity.setChanged();
             return true;
         }

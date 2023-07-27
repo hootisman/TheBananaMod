@@ -24,7 +24,7 @@ public class BreadRecipe extends AbstractCookingRecipe {
 
     @Override
     public ItemStack assemble(Container container, RegistryAccess registryAccess) {
-        DoughData data = new DoughData();
+        DoughData data = new DoughData(null);
         data.loadIngredients(container.getItem(0).getTag());
         ItemStack resultWithTag = result.copy();
         resultWithTag.setTag(data.calculateBreadData());

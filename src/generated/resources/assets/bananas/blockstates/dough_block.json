@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
-      "model": "bananas:block/dough_block"
+    "layers=0": {
+      "model": "bananas:block/dough_height4"
+    },
+    "layers=1": {
+      "model": "bananas:block/dough_height7"
+    },
+    "layers=2": {
+      "model": "bananas:block/dough_height10"
+    },
+    "layers=3": {
+      "model": "bananas:block/dough_height13"
+    },
+    "layers=4": {
+      "model": "bananas:block/dough_height16"
     }
   }
 }

@@ -2,6 +2,7 @@ package net.hootisman.bananas.data;
 
 import net.hootisman.bananas.BananaCore;
 import net.hootisman.bananas.block.BananaMushBlock;
+import net.hootisman.bananas.block.DoughCauldronBlock;
 import net.hootisman.bananas.block.FlourBlock;
 import net.hootisman.bananas.block.FlourCauldronBlock;
 import net.hootisman.bananas.registry.BananaBlocks;
@@ -24,23 +25,40 @@ public class BanBlockStateProvider extends BlockStateProvider {
         simpleLayerBlock(BananaBlocks.BANANA_MUSH_BLOCK.get(),"banana_mush_block", BananaMushBlock.BLOCK_HEIGHT);
         flourLayerBlock(BananaBlocks.FLOUR_BLOCK.get());
         flourCauldronBlock(BananaBlocks.FLOUR_CAULDRON.get());
-        simpleBlock(BananaBlocks.DOUGH_BLOCK.get());
+//        simpleBlock(BananaBlocks.DOUGH_BLOCK.get());
 
-        getVariantBuilder(BananaBlocks.DOUGH_CAULDRON.get()).partialState()
-                .setModels(cauldronBlock(models().withExistingParent("dough_cauldron",mcLoc("block/cauldron"))
-                        .texture("content",modLoc("block/dough_block"))
-                        .element().face(Direction.UP).tintindex(0).texture("#content").end().from(2,4,2).to(14,15,14).end()));
+        doughLayerBlock(BananaBlocks.DOUGH_BLOCK.get());
+        doughCauldronBlock(BananaBlocks.DOUGH_CAULDRON.get());
+    }
+    private void doughCauldronBlock(Block block){
+        int[] heights = {7, 9, 11, 13, 15};
+        for (int i = 0; i <= 4; i++){
+            getVariantBuilder(block).partialState()
+                    .with(DoughCauldronBlock.LAYERS,i)
+                    .setModels(cauldronBlock(models().withExistingParent(String.format("%s%d","dough_cauldron_height",heights[i]), mcLoc("block/cauldron"))
+                            .texture("content",modLoc("block/dough_block"))
+                            .element().face(Direction.UP).tintindex(0).texture("#content").end().from(2,4,2).to(14,heights[i],14).end()
+                    ));
+        }
     }
     private void flourCauldronBlock(Block block){
         int height = 3;
         for(int i = 1; i <= 8; i++){
             height += 1 + (i % 2);
             getVariantBuilder(block).partialState()
-                    .with(FlourCauldronBlock.LEVEL,i)
+                    .with(FlourCauldronBlock.LAYERS,i)
                     .setModels(cauldronBlock(models()
                             .withExistingParent(String.format("%s%d","flour_cauldron_height",height),mcLoc("block/cauldron"))
                             .texture("content",modLoc("block/flour_block"))
                             .element().face(Direction.UP).tintindex(0).texture("#content").end().from(2,4,2).to(14,height,14).end() ));
+        }
+    }
+    private void doughLayerBlock(Block block){
+        int[] heights = {4, 7, 10, 13, 16};
+        for (int i = 0; i <= 4; i++){
+            getVariantBuilder(block).partialState()
+                    .with(DoughCauldronBlock.LAYERS,i)
+                    .setModels(addLayerModel(mcLoc("block/thin_block"),String.format("%s%d","dough_height",heights[i]), modLoc("block/dough_block"),heights[i]));
         }
     }
     private void flourLayerBlock(Block block){

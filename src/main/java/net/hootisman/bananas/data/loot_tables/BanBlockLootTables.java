@@ -20,7 +20,6 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.registries.RegistryObject;
-import org.antlr.v4.codegen.model.Loop;
 
 import java.util.Set;
 
@@ -52,7 +51,7 @@ public class BanBlockLootTables extends BlockLootSubProvider {
 
             flourCauldronTable.withPool(blockStatePool(BananaBlocks.FLOUR_CAULDRON.get()
                     .defaultBlockState()
-                    .setValue(FlourCauldronBlock.LEVEL,i), BananaItems.FLOUR.get(), FlourCauldronBlock.LEVEL));
+                    .setValue(FlourCauldronBlock.LAYERS,i), BananaItems.FLOUR.get(), FlourCauldronBlock.LAYERS));
         }
         add(BananaBlocks.FLOUR_BLOCK.get(), flourTable);
         add(BananaBlocks.FLOUR_CAULDRON.get(), flourCauldronTable);

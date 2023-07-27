@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
-      "model": "bananas:block/dough_cauldron"
+    "layers=0": {
+      "model": "bananas:block/dough_cauldron_height7"
+    },
+    "layers=1": {
+      "model": "bananas:block/dough_cauldron_height9"
+    },
+    "layers=2": {
+      "model": "bananas:block/dough_cauldron_height11"
+    },
+    "layers=3": {
+      "model": "bananas:block/dough_cauldron_height13"
+    },
+    "layers=4": {
+      "model": "bananas:block/dough_cauldron_height15"
     }
   }
 }

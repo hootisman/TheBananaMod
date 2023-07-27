@@ -1,5 +1,6 @@
 package net.hootisman.bananas.block.entity;
 
+import net.hootisman.bananas.block.DoughCauldronBlock;
 import net.hootisman.bananas.registry.BananaBlockEntities;
 import net.hootisman.bananas.registry.BananaBlocks;
 import net.hootisman.bananas.util.DoughData;
@@ -15,12 +16,17 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class DoughBlockEntity extends BlockEntity {
-    private final DoughData data = new DoughData();
+    private final DoughData data = new DoughData(this);
     private long lastTickTime = 0;
     public DoughBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(getDoughEntityType(blockState),blockPos,blockState);
     }
-
+    public BlockState createLayerBlockState(int layer){
+        return getBlockState().setValue(DoughCauldronBlock.LAYERS, layer);
+    }
+    public void updateBlockState(){
+        if (getLevel() != null) getLevel().setBlockAndUpdate(getBlockPos(), createLayerBlockState(data.calculateBlockStateLayer()));
+    }
     public DoughData getDoughData() {
         return data;
     }
@@ -28,6 +34,7 @@ public class DoughBlockEntity extends BlockEntity {
     public void loadDoughContent(CompoundTag tag){
         lastTickTime = tag.getLong("time");
         data.loadIngredients(tag);  //TODO might cause some performance issues?
+        updateBlockState();
     }
     public CompoundTag saveDoughContent(CompoundTag tag){
         tag.putLong("time",lastTickTime);
@@ -48,7 +55,6 @@ public class DoughBlockEntity extends BlockEntity {
         super.load(nbt);
         loadDoughContent(nbt);
     }
-
     public static BlockEntityType<DoughBlockEntity> getDoughEntityType(BlockState doughState){
         BlockEntityType<DoughBlockEntity> doughEntityType = BananaBlockEntities.DOUGH_BLOCK_ENTITY.get();   //default
         if (doughState.is(BananaBlocks.DOUGH_CAULDRON.get())){

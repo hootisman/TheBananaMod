@@ -1,6 +1,5 @@
 package net.hootisman.bananas.util;
 
-import com.mojang.logging.LogUtils;
 import net.hootisman.bananas.block.FlourCauldronBlock;
 import net.hootisman.bananas.block.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaBlockEntities;
@@ -51,9 +50,9 @@ public class CauldronUtils {
     public static final CauldronInteraction FILL_FLOUR_ON_FLOUR = (blockState, level, blockPos, player, hand, stack) -> {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
 
-        if (blockState.getValue(FlourCauldronBlock.LEVEL) != 8){
+        if (blockState.getValue(FlourCauldronBlock.LAYERS) != 8){
             if (!player.getAbilities().instabuild) stack.shrink(1);
-            level.setBlockAndUpdate(blockPos, blockState.setValue(FlourCauldronBlock.LEVEL, blockState.getValue(FlourCauldronBlock.LEVEL) + 1));
+            level.setBlockAndUpdate(blockPos, blockState.setValue(FlourCauldronBlock.LAYERS, blockState.getValue(FlourCauldronBlock.LAYERS) + 1));
             DoughUtils.playSoundHelper(level,blockPos,SoundEvents.SAND_PLACE);
         }
 
@@ -80,7 +79,7 @@ public class CauldronUtils {
         if (level.isClientSide() || !player.isShiftKeyDown()) return InteractionResult.SUCCESS;
 
         ItemStack flour = new ItemStack(BananaItems.FLOUR.get());
-        flour.setCount(blockState.getValue(FlourCauldronBlock.LEVEL));
+        flour.setCount(blockState.getValue(FlourCauldronBlock.LAYERS));
 
         ItemEntity flourEntity = new ItemEntity(level,
                 blockPos.getX() + 0.5d,blockPos.getY() + 1d,blockPos.getZ() + 0.5d,
@@ -114,7 +113,7 @@ public class CauldronUtils {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         if (PotionUtils.getPotion(stack) == Potions.WATER ) {
-            CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), DoughUtils.FLOUR_PER_DUST * blockState.getValue(FlourCauldronBlock.LEVEL), DoughUtils.WATER_PER_BOTTLE, 0, 0);
+            CompoundTag tag = DoughUtils.saveSpecificContent(level.getGameTime(), DoughUtils.FLOUR_PER_DUST * blockState.getValue(FlourCauldronBlock.LAYERS), DoughUtils.WATER_PER_BOTTLE, 0, 0);
             placeDoughHelper(level, blockPos, SoundEvents.BREWING_STAND_BREW, tag,
                     BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get(),
                     BananaBlocks.DOUGH_CAULDRON.get().defaultBlockState(),
@@ -146,7 +145,7 @@ public class CauldronUtils {
         level.getBlockEntity(blockPos,BananaBlockEntities.DOUGH_CAULDRON_ENTITY.get()).ifPresent((DoughBlockEntity doughCauldron) -> {
             DoughData data = doughCauldron.getDoughData();
             data.increaseFlour(DoughUtils.FLOUR_PER_DUST);
-            LogUtils.getLogger().info("FLOUR; SIZE AFTER INCREASE " + data.getSize());
+
             if (data.getSize() <= DoughUtils.MAX_DOUGH_SIZE){
                 //dough size is less than max
                 if (!player.getAbilities().instabuild) stack.shrink(1);
@@ -173,7 +172,6 @@ public class CauldronUtils {
             DoughData data = doughCauldron.getDoughData();
             data.increaseWater(DoughUtils.WATER_PER_BOTTLE); //try increase
 
-            LogUtils.getLogger().info("WATER; SIZE AFTER INCREASE " + data.getSize());
             if (data.getSize() <= DoughUtils.MAX_DOUGH_SIZE){
                 //dough size is less than max
                 if (!player.getAbilities().instabuild) player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.GLASS_BOTTLE)));

@@ -1,5 +1,6 @@
 package net.hootisman.bananas.util;
 
+import net.hootisman.bananas.block.DoughCauldronBlock;
 import net.hootisman.bananas.block.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.core.BlockPos;
@@ -57,7 +58,7 @@ public class DoughUtils {
         DoughBlockEntity dough = createDoughEntity.get();
         if (dough != null){
             if (tag != null) dough.loadDoughContent(tag);
-            swapItemBlockFunc.accept(dough.getBlockState());
+            swapItemBlockFunc.accept(dough.createLayerBlockState(dough.getDoughData().calculateBlockStateLayer()));
         }
         return dough;
     }
