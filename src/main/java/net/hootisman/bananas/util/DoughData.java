@@ -189,13 +189,16 @@ public class DoughData {
         eatTag.putFloat("saturationMod",saturationMod);
         return eatTag;
     }
+    public void updateDoughData(){
+        blockEntity.updateBlockState();
+        blockEntity.setChanged();
+    }
 
     // TODO javadoc
-    public boolean doYeastFerment(DoughBlockEntity entity){
+    public boolean doYeastFerment(){
         if (DoughUtils.canYeastGrow(get("yeast"))){
             setIngredient("yeast", (short) (get("yeast") + 1));
-            blockEntity.updateBlockState();
-            entity.setChanged();
+            updateDoughData();
             return true;
         }
         return false;

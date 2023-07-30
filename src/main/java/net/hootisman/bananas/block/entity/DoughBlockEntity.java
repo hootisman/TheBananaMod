@@ -65,7 +65,7 @@ public class DoughBlockEntity extends BlockEntity {
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, DoughBlockEntity entity) {
         if (level.isClientSide()) return;
 
-        if (DoughUtils.hasYeastFermented(level.getGameTime(), entity.lastTickTime) && entity.data.doYeastFerment(entity)) {
+        if (DoughUtils.hasYeastFermented(level.getGameTime(), entity.lastTickTime) && entity.data.doYeastFerment()) {
 //            LogUtils.getLogger().info("test of randomness! new tick till ferment is: " + level.random.nextIntBetweenInclusive(0,DoughUtils.YEAST_TICK));
 
             entity.lastTickTime = level.getGameTime();
