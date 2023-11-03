@@ -1,12 +1,10 @@
 package net.hootisman.bananas.util;
 
-import net.hootisman.bananas.block.DoughCauldronBlock;
 import net.hootisman.bananas.block.entity.DoughBlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NumericTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +53,7 @@ public class DoughData {
     }
     // TODO javadoc
     public void loadIngredients(CompoundTag tag){
-        if (DoughUtils.isDoughTag(tag)){
+        if (DoughUtils.hasDoughTag(tag)){
             doughTag = tag;
             totalFlour = getTagData("flour");
             applyToIngredients(this::getTagData);
@@ -194,10 +192,13 @@ public class DoughData {
         blockEntity.setChanged();
     }
 
-    // TODO javadoc
+    /**
+     * Increments yeast value
+     * @return successful or not
+     */
     public boolean doYeastFerment(){
         if (DoughUtils.canYeastGrow(get("yeast"))){
-            setIngredient("yeast", (short) (get("yeast") + 1));
+            setIngredient("yeast", (short) (get("yeast") + DoughUtils.YEAST_UNIT));
             updateDoughData();
             return true;
         }

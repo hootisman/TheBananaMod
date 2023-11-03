@@ -1,6 +1,5 @@
 package net.hootisman.bananas.util;
 
-import net.hootisman.bananas.block.DoughCauldronBlock;
 import net.hootisman.bananas.block.entity.DoughBlockEntity;
 import net.hootisman.bananas.registry.BananaItems;
 import net.minecraft.core.BlockPos;
@@ -8,8 +7,10 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -27,6 +28,10 @@ public class DoughUtils {
      * How many ticks it takes for the yeast amount in {@link DoughData} to increase by 1
      */
     public static final int YEAST_TICK = 400;
+    /**
+     * Amount to increase yeast by every {@link #YEAST_TICK}
+     */
+    public static final int YEAST_UNIT = 2;
     /**
      * Maximum dough size in {@link DoughData} (in grams)
      */
@@ -48,7 +53,7 @@ public class DoughUtils {
     /**
      * Tries to create and place a {@link DoughBlockEntity}
      *
-     * @param tag tag that has passed {@link #isDoughTag(CompoundTag)}
+     * @param tag tag that has passed {@link #hasDoughTag(CompoundTag)}
      * @param createDoughEntity supplier for creating a dough block entity
      * @param swapItemBlockFunc consumer for running {@link #swapItemAndBlock(Player, Level, BlockPos, InteractionHand, ItemStack, BlockState)}
      * @return a newly created dough block entity
@@ -91,6 +96,29 @@ public class DoughUtils {
             return createItemEntity.apply(bread);
         }
         return null;
+    }
+
+    /**
+     * Updates yeast value of a dough-item in the players inventory
+     * @param stack dough item reference
+     * @param level
+     * @param entity entity with bread
+     * @param slot inventory slot of item
+     * @param selected true if holding item
+     * @see net.hootisman.bananas.item.DoughBowlItem
+     */
+    public static void tickInventoryDough(ItemStack stack, Level level, Entity entity, int slot, boolean selected){
+        if(!DoughUtils.hasDoughTag(stack)) return;
+
+        CompoundTag tag = stack.getTag();
+        long lastTickTime = tag.getLong("time");
+        short yeast = tag.getShort("yeast");
+        if(DoughUtils.hasYeastFermented(level.getGameTime(), lastTickTime) && DoughUtils.canYeastGrow(yeast)){
+            tag.putShort("yeast", (short) (yeast + YEAST_UNIT));
+            tag.putLong("time",level.getGameTime());
+            stack.setTag(tag);
+            if (selected) DoughUtils.playSoundHelper(level,entity.blockPosition(), SoundEvents.BUBBLE_COLUMN_BUBBLE_POP);
+        }
     }
 
     /**
@@ -157,7 +185,7 @@ public class DoughUtils {
      * @return true if tag has data it needs to make dough
      * @see #hasDoughTag(ItemStack)
      */
-    public static boolean isDoughTag(CompoundTag tag){
+    public static boolean hasDoughTag(CompoundTag tag){
         return tag.contains("time") &&
                 tag.contains("flour") &&
                 tag.contains("water") &&
@@ -169,10 +197,10 @@ public class DoughUtils {
      * Checks if {@link ItemStack} has dough tag
      * @param stack stack to check
      * @return true if tag has data it needs to make dough
-     * @see #isDoughTag(CompoundTag)
+     * @see #hasDoughTag(CompoundTag)
      */
     public static boolean hasDoughTag(ItemStack stack){
-        return stack.hasTag() && isDoughTag(stack.getTag());
+        return stack.hasTag() && hasDoughTag(stack.getTag());
     }
 
 }

@@ -20,6 +20,6 @@ public class BreadItem extends Item {
             float satmod = stack.getTag().getInt("saturationMod");
             return new FoodProperties.Builder().nutrition(nutri).saturationMod(satmod).build();
         }
-        return super.getFoodProperties(stack, entity);
+        return super.getFoodProperties(stack, entity); //default
     }
 }

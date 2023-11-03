@@ -31,18 +31,7 @@ public class DoughBowlItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
-        if(!DoughUtils.hasDoughTag(stack)) return;
-
-        CompoundTag tag = stack.getTag();
-        long lastTickTime = tag.getLong("time");
-        short yeast = tag.getShort("yeast");
-        if(DoughUtils.hasYeastFermented(level.getGameTime(), lastTickTime) && DoughUtils.canYeastGrow(yeast)){
-            tag.putShort("yeast", (short) (yeast + 1));
-            tag.putLong("time",level.getGameTime());
-            stack.setTag(tag);
-            if (selected) DoughUtils.playSoundHelper(level,entity.blockPosition(), SoundEvents.BUBBLE_COLUMN_BUBBLE_POP);
-        }
-
+        DoughUtils.tickInventoryDough(stack,level,entity,slot,selected);
     }
     @Override
     public InteractionResult useOn(UseOnContext context) {
